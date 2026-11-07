@@ -4,9 +4,11 @@
  */
 
 import './styles.css';
+import './workspace.css';
+import { initProblemWorkspace, teardownProblemWorkspace } from './problemLayout';
 
 console.log(
-  `%c[CFusion]%c Codeforces Reimagined active! 🚀`,
+  `%c[CFusion]%c Codeforces Reimagined Phase 2 active! 🚀`,
   'background: #6366F1; color: #fff; font-weight: bold; padding: 2px 6px; border-radius: 4px;',
   'color: #38BDF8; font-weight: bold;'
 );
@@ -67,18 +69,18 @@ function applyTheme(enabled, theme) {
 }
 
 /**
- * Mount a minimal, elegant indicator verifying CFusion is active
+ * Mount a minimal, elegant indicator verifying CFusion is active on non-problem pages
  */
 function mountIndicator(context) {
+  // On problem pages, the topbar already displays the CFusion pill badge
+  if (context.type === 'problem') return;
   if (document.getElementById('cfusion-indicator')) return;
 
   const badge = document.createElement('div');
   badge.id = 'cfusion-indicator';
 
   let contextLabel = 'Codeforces';
-  if (context.type === 'problem') {
-    contextLabel = `Problem ${context.contestId}${context.problemIndex}`;
-  } else if (context.type === 'contest') {
+  if (context.type === 'contest') {
     contextLabel = 'Contest';
   } else if (context.type === 'problemset') {
     contextLabel = 'Problemset';
@@ -111,6 +113,13 @@ async function initCFusion() {
       if (area === 'local') {
         if (changes.cfusion_enabled !== undefined) {
           settings.cfusion_enabled = changes.cfusion_enabled.newValue;
+          if (context.type === 'problem') {
+            if (settings.cfusion_enabled) {
+              initProblemWorkspace(context);
+            } else {
+              teardownProblemWorkspace();
+            }
+          }
         }
         if (changes.theme !== undefined) {
           settings.theme = changes.theme.newValue;
@@ -122,11 +131,17 @@ async function initCFusion() {
 
   applyTheme(settings.cfusion_enabled, settings.theme);
 
-  // When DOM is fully ready, mount the UI indicator
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => mountIndicator(context));
-  } else {
+  const onDomReady = () => {
     mountIndicator(context);
+    if (context.type === 'problem' && settings.cfusion_enabled) {
+      initProblemWorkspace(context);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onDomReady);
+  } else {
+    onDomReady();
   }
 }
 
