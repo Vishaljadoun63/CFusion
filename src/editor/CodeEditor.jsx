@@ -5,12 +5,31 @@ import { Loader2 } from 'lucide-react';
 import { LANGUAGE_METADATA } from './starterTemplates';
 import { registerSynchronousLanguages } from './languages';
 
-// Setup Mock Worker to satisfy Monaco environment in Chrome content script
-if (typeof window !== 'undefined' && !window.MonacoEnvironment) {
+// Setup Monaco Worker configuration for Chrome Extension Content Scripts
+if (typeof window !== 'undefined') {
   window.MonacoEnvironment = {
-    getWorker: function () {
-      const blob = new Blob(['self.onmessage = function () {};'], { type: 'text/javascript' });
-      return new Worker(URL.createObjectURL(blob));
+    getWorker: function (_moduleId, _label) {
+      try {
+        const extensionBaseUrl = typeof chrome !== 'undefined' && chrome.runtime ? chrome.runtime.getURL('') : '';
+        const workerScriptUrl = typeof chrome !== 'undefined' && chrome.runtime ? chrome.runtime.getURL('assets/editor.worker.js') : '';
+
+        // Cross-origin worker bridge using data URI importing the packaged local worker
+        const workerDataUri = `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+          self.MonacoEnvironment = {
+            baseUrl: '${extensionBaseUrl}'
+          };
+          try {
+            importScripts('${workerScriptUrl}');
+          } catch (e) {
+            self.onmessage = function () {};
+          }
+        `)}`;
+        return new Worker(workerDataUri);
+      } catch (err) {
+        // Safe fallback to main-thread-compatible mock worker
+        const blob = new Blob(['self.onmessage = function () {};'], { type: 'application/javascript' });
+        return new Worker(URL.createObjectURL(blob));
+      }
     }
   };
 }
