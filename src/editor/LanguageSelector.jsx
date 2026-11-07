@@ -3,15 +3,32 @@ import { LANGUAGE_METADATA } from './starterTemplates';
 
 export default function LanguageSelector({ currentLang, onLanguageChange }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <select
         value={currentLang}
         onChange={(e) => onLanguageChange(e.target.value)}
-        className="cfusion-select bg-[#0B1120] text-[#F8FAFC] border border-[#273449] rounded-md px-2.5 py-1 text-xs font-medium cursor-pointer focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] outline-none transition-all"
+        className="cfusion-select"
+        style={{
+          backgroundColor: '#0B1120',
+          color: '#F8FAFC',
+          border: '1px solid #273449',
+          borderRadius: '6px',
+          padding: '4px 10px',
+          fontSize: '12px',
+          fontWeight: 600,
+          cursor: 'pointer',
+          outline: 'none',
+          fontFamily: "'JetBrains Mono', Consolas, monospace",
+          transition: 'all 0.15s ease'
+        }}
         title="Select Programming Language"
       >
         {Object.values(LANGUAGE_METADATA).map((lang) => (
-          <option key={lang.id} value={lang.id} className="bg-[#111827] text-[#F8FAFC]">
+          <option
+            key={lang.id}
+            value={lang.id}
+            style={{ backgroundColor: '#111827', color: '#F8FAFC' }}
+          >
             {lang.label}
           </option>
         ))}

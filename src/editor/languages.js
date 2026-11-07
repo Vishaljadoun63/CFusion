@@ -3,6 +3,8 @@
  * Bundled statically to prevent dynamic CDN chunk loading on Codeforces
  */
 
+import * as monaco from 'monaco-editor';
+
 // C++ Configuration & Tokens
 export const cppConf = {
   comments: {
@@ -426,7 +428,7 @@ export const pythonConf = {
       beforeText: new RegExp(
         "^\\s*(?:def|class|for|if|elif|else|while|try|with|finally|except|async|match|case).*?:\\s*$"
       ),
-      action: { indentAction: languages.IndentAction.Indent }
+      action: { indentAction: monaco.languages.IndentAction.Indent }
     }
   ],
   folding: {
@@ -925,24 +927,25 @@ export const javaLanguage = {
 
 
 
-export function registerSynchronousLanguages(monaco) {
-  const existing = monaco.languages.getLanguages().map(l => l.id);
+export function registerSynchronousLanguages(monacoInstance) {
+  const instance = monacoInstance || monaco;
+  const existing = instance.languages.getLanguages().map(l => l.id);
 
   if (!existing.includes('cpp')) {
-    monaco.languages.register({ id: 'cpp', extensions: ['.cpp', '.cc', '.cxx', '.hpp', '.h'] });
+    instance.languages.register({ id: 'cpp', extensions: ['.cpp', '.cc', '.cxx', '.hpp', '.h'] });
   }
-  monaco.languages.setMonarchTokensProvider('cpp', cppLanguage);
-  monaco.languages.setLanguageConfiguration('cpp', cppConf);
+  instance.languages.setMonarchTokensProvider('cpp', cppLanguage);
+  instance.languages.setLanguageConfiguration('cpp', cppConf);
 
   if (!existing.includes('python')) {
-    monaco.languages.register({ id: 'python', extensions: ['.py'] });
+    instance.languages.register({ id: 'python', extensions: ['.py'] });
   }
-  monaco.languages.setMonarchTokensProvider('python', pythonLanguage);
-  monaco.languages.setLanguageConfiguration('python', pythonConf);
+  instance.languages.setMonarchTokensProvider('python', pythonLanguage);
+  instance.languages.setLanguageConfiguration('python', pythonConf);
 
   if (!existing.includes('java')) {
-    monaco.languages.register({ id: 'java', extensions: ['.java'] });
+    instance.languages.register({ id: 'java', extensions: ['.java'] });
   }
-  monaco.languages.setMonarchTokensProvider('java', javaLanguage);
-  monaco.languages.setLanguageConfiguration('java', javaConf);
+  instance.languages.setMonarchTokensProvider('java', javaLanguage);
+  instance.languages.setLanguageConfiguration('java', javaConf);
 }

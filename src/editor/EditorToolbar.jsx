@@ -30,53 +30,115 @@ export default function EditorToolbar({
   };
 
   return (
-    <div className="flex items-center justify-between h-[42px] min-h-[42px] bg-[#172033] border-b border-[#273449] px-3 select-none">
-      {/* File Tab */}
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-[#111827] text-[#F8FAFC] text-xs font-mono px-3 py-1.5 rounded-t-md border-t-2 border-[#6366F1] font-medium shadow-sm">
-          <FileCode className="w-3.5 h-3.5 text-[#818CF8]" />
+    <div
+      className="cfusion-editor-toolbar"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '42px',
+        minHeight: '42px',
+        maxHeight: '42px',
+        backgroundColor: '#172033',
+        borderBottom: '1px solid #273449',
+        padding: '0 12px',
+        flexShrink: 0,
+        userSelect: 'none',
+        zIndex: 5
+      }}
+    >
+      {/* File Tab & Save Status */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            backgroundColor: '#111827',
+            color: '#F8FAFC',
+            fontSize: '12px',
+            fontFamily: "'JetBrains Mono', Consolas, monospace",
+            padding: '5px 12px',
+            borderRadius: '6px 6px 0 0',
+            borderTop: '2px solid #6366F1',
+            fontWeight: 600,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+          }}
+        >
+          <FileCode style={{ color: '#818CF8', width: '14px', height: '14px' }} />
           <span>{langMeta.filename}</span>
         </div>
 
         {/* Auto-save Status Indicator */}
-        <div className="flex items-center gap-1 text-[11px] text-[#94A3B8] ml-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', marginLeft: '6px' }}>
           {isSaving ? (
-            <span className="text-amber-400">Saving...</span>
+            <span style={{ color: '#F59E0B' }}>Saving...</span>
           ) : (
-            <span className="flex items-center gap-1 text-emerald-400/80">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#10B981' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
               <span>Saved</span>
             </span>
           )}
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2">
+      {/* Actions (Language Dropdown, Reset, Copy) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <LanguageSelector currentLang={currentLang} onLanguageChange={onLanguageChange} />
 
         {/* Reset Code */}
         <button
           onClick={handleReset}
-          className="cfusion-btn flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-[#0B1120] hover:bg-[#1E293B] text-[#E2E8F0] border border-[#273449] hover:border-[#475569] transition-all cursor-pointer"
+          className="cfusion-btn"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '4px 10px',
+            fontSize: '12px',
+            fontWeight: 500,
+            borderRadius: '6px',
+            backgroundColor: '#0B1120',
+            color: '#E2E8F0',
+            border: '1px solid #273449',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
           title="Reset code to original starter template"
         >
-          <RotateCcw className={`w-3 h-3 ${resetting ? 'animate-spin text-amber-400' : ''}`} />
-          <span className="hidden sm:inline">{resetting ? 'Reset!' : 'Reset'}</span>
+          <RotateCcw
+            style={{ width: '12px', height: '12px', color: resetting ? '#F59E0B' : '#94A3B8' }}
+            className={resetting ? 'animate-spin' : ''}
+          />
+          <span>{resetting ? 'Reset!' : 'Reset'}</span>
         </button>
 
         {/* Copy Code */}
         <button
           onClick={handleCopy}
-          className={`cfusion-btn flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md border transition-all cursor-pointer ${
-            copied
-              ? 'bg-emerald-600 border-emerald-500 text-white'
-              : 'bg-[#0B1120] hover:bg-[#1E293B] text-[#E2E8F0] border-[#273449] hover:border-[#475569]'
-          }`}
+          className="cfusion-btn"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '4px 10px',
+            fontSize: '12px',
+            fontWeight: 500,
+            borderRadius: '6px',
+            backgroundColor: copied ? '#10B981' : '#0B1120',
+            color: copied ? '#FFFFFF' : '#E2E8F0',
+            border: copied ? '1px solid #10B981' : '1px solid #273449',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
           title="Copy current code to clipboard"
         >
-          {copied ? <Check className="w-3 h-3 text-white" /> : <Copy className="w-3 h-3" />}
-          <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
+          {copied ? (
+            <Check style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
+          ) : (
+            <Copy style={{ width: '12px', height: '12px', color: '#94A3B8' }} />
+          )}
+          <span>{copied ? 'Copied!' : 'Copy'}</span>
         </button>
       </div>
     </div>
