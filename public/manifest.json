@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CFusion — Codeforces Reimagined",
   "version": "0.1.0",
-  "description": "Transforms Codeforces into a modern competitive programming workspace with dark mode and sleek UI.",
+  "description": "Transforms Codeforces into a modern competitive programming workspace with dark mode, Monaco Editor, and sleek UI.",
   "permissions": [
     "storage"
   ],
@@ -37,6 +37,18 @@
       "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "icons/*"
+      ],
+      "matches": [
+        "*://codeforces.com/*",
+        "*://*.codeforces.com/*"
+      ]
     }
   ]
 }
