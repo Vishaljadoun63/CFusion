@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "CFusion — Codeforces Reimagined",
+  "version": "0.1.0",
+  "description": "Transforms Codeforces into a modern competitive programming workspace with dark mode and sleek UI.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://codeforces.com/*",
+    "*://*.codeforces.com/*"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "CFusion Settings",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://codeforces.com/*",
+        "*://*.codeforces.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_start"
+    }
+  ]
+}

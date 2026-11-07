@@ -1,0 +1,371 @@
+/**
+ * CFusion - Codeforces Reimagined Theme
+ * Dark Palette:
+ *   Background: #0B1120
+ *   Secondary background: #111827
+ *   Cards: #172033
+ *   Borders: #273449
+ *   Primary Accent: #6366F1
+ *   Secondary Accent: #38BDF8
+ *   Main Text: #F8FAFC
+ *   Secondary Text: #94A3B8
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Apply modern font and dark theme base */
+html.cfusion-dark,
+html.cfusion-dark body {
+  background-color: #0B1120 !important;
+  color: #F8FAFC !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Links */
+html.cfusion-dark a {
+  color: #38BDF8;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+}
+html.cfusion-dark a:hover {
+  color: #818CF8;
+  text-decoration: underline;
+}
+
+/* Header & Top Bar */
+html.cfusion-dark #header {
+  background-color: #111827 !important;
+  border-bottom: 1px solid #273449 !important;
+  padding: 12px 24px !important;
+  margin-bottom: 20px !important;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Language selector & personal menu */
+html.cfusion-dark .lang-chooser,
+html.cfusion-dark .personal-sidebar {
+  color: #94A3B8 !important;
+}
+html.cfusion-dark .personal-sidebar a {
+  color: #38BDF8 !important;
+  font-weight: 500;
+}
+
+/* Main Navigation Menu */
+html.cfusion-dark .main-menu-list {
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  gap: 6px !important;
+  padding: 6px 0 !important;
+}
+
+html.cfusion-dark .main-menu-list li {
+  border: none !important;
+  margin: 0 !important;
+}
+
+html.cfusion-dark .main-menu-list li a {
+  display: block !important;
+  padding: 8px 14px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  color: #94A3B8 !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+html.cfusion-dark .main-menu-list li.current a,
+html.cfusion-dark .main-menu-list li a:hover {
+  background-color: #172033 !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.cfusion-dark .main-menu-list li.current a {
+  border-bottom: 2px solid #6366F1 !important;
+}
+
+/* Sub-menus / Second Level Menu */
+html.cfusion-dark .second-level-menu-list {
+  background-color: #111827 !important;
+  border: 1px solid #273449 !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  margin: 12px 0 !important;
+}
+
+html.cfusion-dark .second-level-menu-list li a {
+  color: #94A3B8 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+}
+
+html.cfusion-dark .second-level-menu-list li.current a,
+html.cfusion-dark .second-level-menu-list li a:hover {
+  background-color: #172033 !important;
+  color: #38BDF8 !important;
+}
+
+/* Cards / Roundboxes */
+html.cfusion-dark .roundbox {
+  background-color: #172033 !important;
+  border: 1px solid #273449 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden;
+  margin-bottom: 20px !important;
+}
+
+html.cfusion-dark .roundbox .caption {
+  background: #111827 !important;
+  border-bottom: 1px solid #273449 !important;
+  color: #F8FAFC !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+}
+
+html.cfusion-dark .roundbox .caption.titled {
+  color: #F8FAFC !important;
+}
+
+html.cfusion-dark .titled__title {
+  color: #F8FAFC !important;
+  font-weight: 600 !important;
+}
+
+html.cfusion-dark .roundbox .top-left,
+html.cfusion-dark .roundbox .top-right,
+html.cfusion-dark .roundbox .bottom-left,
+html.cfusion-dark .roundbox .bottom-right {
+  display: none !important;
+}
+
+/* Sidebar elements */
+html.cfusion-dark #sidebar {
+  padding-left: 16px !important;
+}
+
+/* Problem Statement Modernization */
+html.cfusion-dark .problem-statement {
+  margin: 0 !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: #E2E8F0 !important;
+}
+
+html.cfusion-dark .problem-statement .header .title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #F8FAFC !important;
+  margin-bottom: 12px !important;
+}
+
+html.cfusion-dark .problem-statement .header .time-limit,
+html.cfusion-dark .problem-statement .header .memory-limit,
+html.cfusion-dark .problem-statement .header .input-file,
+html.cfusion-dark .problem-statement .header .output-file {
+  color: #94A3B8 !important;
+  font-size: 13px !important;
+}
+
+html.cfusion-dark .problem-statement .section-title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #F8FAFC !important;
+  border-bottom: 1px solid #273449 !important;
+  padding-bottom: 4px !important;
+  margin: 20px 0 12px 0 !important;
+}
+
+/* Sample Tests & Code Blocks */
+html.cfusion-dark .sample-test {
+  background-color: #0B1120 !important;
+  border: 1px solid #273449 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+html.cfusion-dark .sample-test .input,
+html.cfusion-dark .sample-test .output {
+  border: none !important;
+}
+
+html.cfusion-dark .sample-test .title {
+  background-color: #111827 !important;
+  color: #94A3B8 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid #273449 !important;
+}
+
+html.cfusion-dark .sample-test pre {
+  background-color: #0B1120 !important;
+  color: #38BDF8 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+  padding: 12px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+/* Tables (Problemsets, Status, Standings) */
+html.cfusion-dark .datatable,
+html.cfusion-dark table.problems,
+html.cfusion-dark table.rtable {
+  background-color: #172033 !important;
+  border: 1px solid #273449 !important;
+  border-radius: 8px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+html.cfusion-dark table.problems th,
+html.cfusion-dark table.rtable th,
+html.cfusion-dark .datatable th {
+  background-color: #111827 !important;
+  color: #94A3B8 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 12px 14px !important;
+  border-bottom: 1px solid #273449 !important;
+  border-right: none !important;
+  border-left: none !important;
+}
+
+html.cfusion-dark table.problems td,
+html.cfusion-dark table.rtable td,
+html.cfusion-dark .datatable td {
+  padding: 10px 14px !important;
+  border-bottom: 1px solid #273449 !important;
+  color: #F8FAFC !important;
+  border-right: none !important;
+  border-left: none !important;
+}
+
+html.cfusion-dark table.problems tr:hover td,
+html.cfusion-dark table.rtable tr:hover td,
+html.cfusion-dark .datatable tr:hover td {
+  background-color: #1E293B !important;
+}
+
+/* Dark Alternating Rows */
+html.cfusion-dark .datatable .dark {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Inputs, Selects & Buttons */
+html.cfusion-dark input[type="text"],
+html.cfusion-dark input[type="password"],
+html.cfusion-dark select,
+html.cfusion-dark textarea {
+  background-color: #0B1120 !important;
+  border: 1px solid #273449 !important;
+  color: #F8FAFC !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  outline: none !important;
+  transition: border-color 0.15s ease !important;
+}
+
+html.cfusion-dark input[type="text"]:focus,
+html.cfusion-dark input[type="password"]:focus,
+html.cfusion-dark select:focus,
+html.cfusion-dark textarea:focus {
+  border-color: #6366F1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+}
+
+html.cfusion-dark input[type="submit"],
+html.cfusion-dark button,
+html.cfusion-dark .button {
+  background: #6366F1 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease !important;
+}
+
+html.cfusion-dark input[type="submit"]:hover,
+html.cfusion-dark button:hover,
+html.cfusion-dark .button:hover {
+  background: #4F46E5 !important;
+}
+
+/* PRESERVE CRITICAL CODEFORCES COLORS */
+/* Keep user rank rating colors vibrant and untouched */
+html.cfusion-dark .user-legendary,
+html.cfusion-dark .user-red,
+html.cfusion-dark .user-orange,
+html.cfusion-dark .user-violet,
+html.cfusion-dark .user-blue,
+html.cfusion-dark .user-cyan,
+html.cfusion-dark .user-green,
+html.cfusion-dark .user-gray,
+html.cfusion-dark .user-black,
+html.cfusion-dark .user-admin {
+  text-shadow: none !important;
+}
+
+/* Verdict colors */
+html.cfusion-dark .verdict-accepted {
+  color: #10B981 !important;
+  font-weight: 600;
+}
+html.cfusion-dark .verdict-rejected,
+html.cfusion-dark .verdict-wrong-answer {
+  color: #EF4444 !important;
+}
+
+/* MathJax / LaTeX formulas preserved */
+html.cfusion-dark .MathJax,
+html.cfusion-dark .tex-span,
+html.cfusion-dark .tex-formula {
+  color: #F8FAFC !important;
+  font-family: inherit;
+}
+
+/* Footer */
+html.cfusion-dark #footer {
+  border-top: 1px solid #273449 !important;
+  color: #64748B !important;
+  padding: 24px 0 !important;
+  margin-top: 40px !important;
+}
+
+/* CFusion Brand Badge indicator on Codeforces */
+#cfusion-indicator {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #6366F1, #38BDF8);
+  color: #FFFFFF;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
