@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "dev": "npm --prefix server run dev",
     "build:popup": "vite build",
     "build:worker": "vite build --config vite.worker.config.js",
     "build:content": "vite build --config vite.content.config.js",
