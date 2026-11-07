@@ -133,10 +133,23 @@ function mapJudge0Status(statusObj) {
 }
 
 /**
+ * Helper to safely decode base64 strings returned by Judge0
+ */
+function decodeBase64(val) {
+  if (!val || typeof val !== 'string') return '';
+  try {
+    return Buffer.from(val, 'base64').toString('utf8');
+  } catch (_) {
+    return val;
+  }
+}
+
+/**
  * POST /api/execute
  * Validates, submits, polls, and returns normalized execution results
  */
 app.post('/api/execute', executionLimiter, async (req, res) => {
+  const startTime = Date.now();
   try {
     const { languageId, sourceCode, stdin } = req.body;
 
@@ -175,14 +188,14 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
 
     const headers = getJudge0Headers();
 
-    // 3. Submit code to Judge0
+    // 3. Submit code to Judge0 (Base64-encoded to protect against Unicode compiler diagnostics)
     const submissionPayload = {
-      source_code: sourceCode,
+      source_code: Buffer.from(sourceCode, 'utf8').toString('base64'),
       language_id: judge0LangId,
-      stdin: stdin || ''
+      stdin: Buffer.from(stdin || '', 'utf8').toString('base64')
     };
 
-    const submitUrl = `${JUDGE0_API_URL}/submissions?base64_encoded=false&wait=false`;
+    const submitUrl = `${JUDGE0_API_URL}/submissions?base64_encoded=true&wait=false`;
     const submitResponse = await fetch(submitUrl, {
       method: 'POST',
       headers,
@@ -190,6 +203,7 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
     });
 
     if (submitResponse.status === 401 || submitResponse.status === 403) {
+      console.error(`[CFusion Server] [${languageId}] Submission failed: Auth error (${submitResponse.status})`);
       return res.status(502).json({
         success: false,
         error: 'Judge0 Authentication Error: Invalid or missing API key.'
@@ -197,6 +211,7 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
     }
 
     if (submitResponse.status === 429) {
+      console.warn(`[CFusion Server] [${languageId}] Submission failed: Upstream rate limit (429)`);
       return res.status(429).json({
         success: false,
         error: 'Judge0 Queue Full: Upstream Judge0 service rate limit reached. Please retry in a few seconds.'
@@ -205,6 +220,7 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
 
     if (!submitResponse.ok) {
       const errText = await submitResponse.text().catch(() => '');
+      console.error(`[CFusion Server] [${languageId}] Submission failed (${submitResponse.status}): ${errText}`);
       return res.status(502).json({
         success: false,
         error: `Judge0 Submission Failed (${submitResponse.status}): ${errText || submitResponse.statusText}`
@@ -215,14 +231,17 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
     const token = submitData?.token;
 
     if (!token) {
+      console.error(`[CFusion Server] [${languageId}] Submission failed: Missing token in response`);
       return res.status(502).json({
         success: false,
         error: 'Judge0 response did not contain a valid submission token.'
       });
     }
 
+    console.log(`[CFusion Server] [${languageId}] Submission created. Token: ${token}`);
+
     // 4. Poll Judge0 until execution completes
-    const MAX_POLL_ATTEMPTS = 25; // 25 attempts * 800ms ≈ 20 seconds maximum
+    const MAX_POLL_ATTEMPTS = 20; // 20 attempts * 800ms ≈ 16 seconds maximum
     const POLL_INTERVAL_MS = 800;
     let attempts = 0;
     let executionResult = null;
@@ -231,17 +250,30 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
       await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
       attempts++;
 
-      const pollUrl = `${JUDGE0_API_URL}/submissions/${token}?base64_encoded=false`;
+      const pollUrl = `${JUDGE0_API_URL}/submissions/${token}?base64_encoded=true`;
       const pollResponse = await fetch(pollUrl, { headers });
 
       if (!pollResponse.ok) {
+        console.warn(`[CFusion Server] Poll ${attempts}/${MAX_POLL_ATTEMPTS}: HTTP ${pollResponse.status}`);
+        if (pollResponse.status === 400) {
+          const errText = await pollResponse.text().catch(() => '');
+          console.error(`[CFusion Server] Judge0 400 Bad Request during polling: ${errText}`);
+          return res.status(502).json({
+            success: false,
+            error: `Judge0 execution error: ${errText || 'Bad Request'}`
+          });
+        }
         continue;
       }
 
       const data = await pollResponse.json();
       const statusId = data.status?.id;
+      const statusDesc = data.status?.description || 'Unknown';
+      const elapsed = Date.now() - startTime;
 
-      // Status 1: In Queue, Status 2: Processing
+      console.log(`[CFusion Server] Poll ${attempts}/${MAX_POLL_ATTEMPTS}: status ${statusId} (${statusDesc}), elapsed: ${elapsed}ms`);
+
+      // Status 1: In Queue, Status 2: Processing. All status > 2 are terminal (Accepted, Compilation Error, Runtime Error, TLE, etc.)
       if (statusId && statusId > 2) {
         executionResult = data;
         break;
@@ -249,21 +281,25 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
     }
 
     if (!executionResult) {
+      const elapsed = Date.now() - startTime;
+      console.warn(`[CFusion Server] Execution timed out after ${elapsed}ms (${attempts} poll attempts)`);
       return res.status(504).json({
         success: false,
-        error: 'Execution Timeout: Code execution took longer than the 20-second threshold.'
+        error: 'Execution Timeout: Code execution took longer than the polling threshold.'
       });
     }
 
-    // 5. Build Normalized Response
+    // 5. Build Normalized Response with decoded outputs
     const statusMapping = mapJudge0Status(executionResult.status);
+    const elapsed = Date.now() - startTime;
+    console.log(`[CFusion Server] Execution finished: ${statusMapping.status} (${statusMapping.description}) in ${elapsed}ms`);
 
     const normalizedResponse = {
       success: true,
       status: statusMapping.status,
-      stdout: executionResult.stdout || '',
-      stderr: executionResult.stderr || '',
-      compile_output: executionResult.compile_output || '',
+      stdout: decodeBase64(executionResult.stdout),
+      stderr: decodeBase64(executionResult.stderr),
+      compile_output: decodeBase64(executionResult.compile_output),
       time: executionResult.time ? `${executionResult.time}s` : null,
       memory: executionResult.memory ? `${executionResult.memory} KB` : null,
       statusDescription: statusMapping.description
@@ -272,7 +308,8 @@ app.post('/api/execute', executionLimiter, async (req, res) => {
     return res.json(normalizedResponse);
 
   } catch (error) {
-    console.error('[CFusion Server] Execution Error:', error.message);
+    const elapsed = Date.now() - startTime;
+    console.error(`[CFusion Server] Execution Error after ${elapsed}ms:`, error.message);
     return res.status(500).json({
       success: false,
       error: `Server Error: ${error.message || 'An unexpected error occurred during execution.'}`

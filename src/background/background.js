@@ -92,6 +92,9 @@ async function handleExecuteCode(payload, sendResponse) {
   }
 
   // --- Fetch with timeout ---
+  const startTime = Date.now();
+  console.log(`[CFusion Background] Starting execution for language "${languageId}"`);
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
@@ -113,6 +116,8 @@ async function handleExecuteCode(payload, sendResponse) {
     if (!response.ok) {
       let errorBody = { error: `HTTP ${response.status}` };
       try { errorBody = await response.json(); } catch (_) { /* ignore */ }
+      const elapsed = Date.now() - startTime;
+      console.warn(`[CFusion Background] Execution HTTP error ${response.status} after ${elapsed}ms`);
       sendResponse({
         success: false,
         status: 'error',
@@ -128,6 +133,8 @@ async function handleExecuteCode(payload, sendResponse) {
     try {
       result = await response.json();
     } catch (_) {
+      const elapsed = Date.now() - startTime;
+      console.error(`[CFusion Background] Non-JSON response from server after ${elapsed}ms`);
       sendResponse({
         success: false,
         status: 'error',
@@ -138,13 +145,18 @@ async function handleExecuteCode(payload, sendResponse) {
       return;
     }
 
+    const elapsed = Date.now() - startTime;
+    console.log(`[CFusion Background] Execution finished in ${elapsed}ms: status=${result.status} (${result.statusDescription || ''})`);
+
     // Pass the backend's normalized result through directly
     sendResponse(result);
 
   } catch (err) {
     clearTimeout(timeoutId);
+    const elapsed = Date.now() - startTime;
 
     if (err.name === 'AbortError') {
+      console.warn(`[CFusion Background] Execution aborted (timed out after ${elapsed}ms)`);
       sendResponse({
         success: false,
         status: 'error',
@@ -153,6 +165,7 @@ async function handleExecuteCode(payload, sendResponse) {
         stderr: 'The request to the execution server timed out after 25 seconds.'
       });
     } else {
+      console.error(`[CFusion Background] Execution transport error after ${elapsed}ms:`, err.message);
       // Network error — server is likely not running
       sendResponse({
         success: false,
