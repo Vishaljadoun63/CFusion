@@ -140,6 +140,12 @@ export function initProblemWorkspace(context) {
         </button>
       ` : ''}
 
+      <!-- My Codes Library Toggle -->
+      <button class="cfusion-btn" id="cfusion-toggle-library" title="Open My Codes Library">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><polyline points="10 2 10 10 13 7 16 10 16 2"/></svg>
+        <span>My Codes</span>
+      </button>
+
       <!-- Contest Sidebar Drawer Toggle -->
       <button class="cfusion-btn" id="cfusion-toggle-sidebar" title="Open Contest Sidebar & Submissions">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="15" x2="15" y1="3" y2="21"/></svg>
@@ -244,6 +250,13 @@ export function initProblemWorkspace(context) {
   setupLayoutSwitch(topbar, leftPane, resizer, rightPane);
   setupSidebarDrawer(topbar, drawer, backdrop);
   setupTagsPopover(topbar, tagsPopover);
+
+  const toggleLibraryBtn = topbar.querySelector('#cfusion-toggle-library');
+  if (toggleLibraryBtn) {
+    toggleLibraryBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('cfusion:toggle-library'));
+    });
+  }
 
   workspaceMounted = true;
   console.log('[CFusion] Split-screen problem workspace with Monaco Editor successfully mounted!');

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RotateCcw, Copy, Check, FileCode } from 'lucide-react';
+import { RotateCcw, Copy, Check, FileCode, Bookmark } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 import { LANGUAGE_METADATA } from './starterTemplates';
 
@@ -8,6 +8,7 @@ export default function EditorToolbar({
   onLanguageChange,
   onResetCode,
   onCopyCode,
+  onOpenSaveModal,
   isSaving
 }) {
   const [copied, setCopied] = useState(false);
@@ -82,9 +83,33 @@ export default function EditorToolbar({
         </div>
       </div>
 
-      {/* Actions (Language Dropdown, Reset, Copy) */}
+      {/* Actions (Language Dropdown, Save Code, Reset, Copy) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <LanguageSelector currentLang={currentLang} onLanguageChange={onLanguageChange} />
+
+        {/* Save Code Action */}
+        <button
+          onClick={onOpenSaveModal}
+          className="cfusion-btn"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '4px 10px',
+            fontSize: '12px',
+            fontWeight: 500,
+            borderRadius: '6px',
+            backgroundColor: '#0B1120',
+            color: '#E2E8F0',
+            border: '1px solid #273449',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          title="Save this code to your Personal Code Library"
+        >
+          <Bookmark style={{ width: '12px', height: '12px', color: '#818CF8' }} />
+          <span>Save Code</span>
+        </button>
 
         {/* Reset Code */}
         <button

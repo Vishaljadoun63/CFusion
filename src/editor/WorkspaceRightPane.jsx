@@ -13,6 +13,8 @@ import {
 import { extractSampleTestCases, createTestCase } from '../services/testCaseParser';
 import { runCode } from '../services/executionService';
 import TestCasesPanel from './TestCasesPanel';
+import SaveSolutionModal from './SaveSolutionModal';
+import CodeLibraryPanel from './CodeLibraryPanel';
 import { Play, Send, Terminal, Loader, CheckSquare } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -198,6 +200,8 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
   const [runProgress, setRunProgress] = useState(null);
   const [runSummary, setRunSummary] = useState(null);
   const [consoleHeight, setConsoleHeight] = useState(260);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   const editorInstanceRef = useRef(null);
   const saveTimeoutRef = useRef(null);
@@ -211,6 +215,35 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
   // Always holds the latest code value so execution closure sees fresh code
   const codeRef = useRef(code);
   useEffect(() => { codeRef.current = code; }, [code]);
+
+  // Listen to Topbar "My Codes" toggle events
+  useEffect(() => {
+    const handleToggleLibrary = () => {
+      setIsLibraryOpen(prev => !prev);
+    };
+    const handleOpenLibrary = () => {
+      setIsLibraryOpen(true);
+    };
+
+    window.addEventListener('cfusion:toggle-library', handleToggleLibrary);
+    window.addEventListener('cfusion:open-library', handleOpenLibrary);
+    return () => {
+      window.removeEventListener('cfusion:toggle-library', handleToggleLibrary);
+      window.removeEventListener('cfusion:open-library', handleOpenLibrary);
+    };
+  }, []);
+
+  // Sync active class with topbar button
+  useEffect(() => {
+    const btn = document.getElementById('cfusion-toggle-library');
+    if (btn) {
+      if (isLibraryOpen) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+  }, [isLibraryOpen]);
 
   // Sync theme with CFusion root
   useEffect(() => {
@@ -405,6 +438,28 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
 
   const handleEditorMount = (editor) => {
     editorInstanceRef.current = editor;
+  };
+
+  // Open a saved solution from My Codes library into Monaco
+  const handleOpenSolutionInEditor = async (sol) => {
+    if (!sol || !sol.code) return;
+
+    // 1. Switch language if necessary
+    if (sol.language && sol.language !== currentLang) {
+      setCurrentLang(sol.language);
+      await savePreferredLanguage(sol.language);
+    }
+
+    // 2. Load code into Monaco editor and React state
+    setCode(sol.code);
+    if (editorInstanceRef.current) {
+      editorInstanceRef.current.setValue(sol.code);
+    }
+
+    // 3. Immediately persist into current problem's auto-save storage
+    const targetLang = sol.language || currentLang;
+    await saveProblemCode(context.contestId, context.problemIndex, targetLang, sol.code);
+    setIsSaving(false);
   };
 
   // Submit → open Codeforces sidebar drawer
@@ -803,6 +858,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
         onLanguageChange={handleLanguageChange}
         onResetCode={handleResetCode}
         onCopyCode={handleCopyCode}
+        onOpenSaveModal={() => setIsSaveModalOpen(true)}
         isSaving={isSaving}
       />
 
@@ -1066,6 +1122,29 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
           </div>
         </div>
       </div>
+
+      {/* 6. Save Solution to Personal Library Modal */}
+      <SaveSolutionModal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        onSaveSuccess={(newSol) => {
+          console.log('[CFusion] Saved solution to library:', newSol.name);
+        }}
+        code={editorInstanceRef.current ? editorInstanceRef.current.getValue() : codeRef.current}
+        currentLang={currentLang}
+        meta={meta}
+        context={context}
+      />
+
+      {/* 7. My Codes Personal Library Overlay Panel */}
+      <CodeLibraryPanel
+        isOpen={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+        onOpenInEditor={handleOpenSolutionInEditor}
+        onOpenSaveModal={() => setIsSaveModalOpen(true)}
+        currentEditorCode={editorInstanceRef.current ? editorInstanceRef.current.getValue() : codeRef.current}
+        currentLang={currentLang}
+      />
     </div>
   );
 }
