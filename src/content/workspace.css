@@ -853,15 +853,50 @@ body.cfusion-workspace-active {
   height: 100% !important;
 }
 
+/* Console Horizontal Resizer Divider */
+.cfusion-console-resizer {
+  height: 6px;
+  width: 100%;
+  cursor: row-resize;
+  background: #172033;
+  border-top: 1px solid #273449;
+  border-bottom: 1px solid #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+  z-index: 10;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.cfusion-console-resizer:hover,
+.cfusion-console-resizer.is-dragging {
+  background: #6366F1;
+}
+
+.cfusion-console-resizer::after {
+  content: '';
+  width: 36px;
+  height: 2px;
+  background: #475569;
+  border-radius: 1px;
+  transition: background-color 0.15s ease;
+}
+
+.cfusion-console-resizer:hover::after,
+.cfusion-console-resizer.is-dragging::after {
+  background: #FFFFFF;
+}
+
 .cfusion-console-panel {
   display: flex !important;
   flex-direction: column !important;
-  height: 220px !important;
-  min-height: 150px !important;
-  max-height: 45% !important;
+  min-height: 140px !important;
   background-color: #111827 !important;
-  border-top: 1px solid #273449 !important;
   flex-shrink: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 @tailwind utilities;

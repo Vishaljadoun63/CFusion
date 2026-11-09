@@ -38,6 +38,18 @@ function extractProblemMetadata(problemStatement) {
     }
   }
 
+  // Extract first sample expected output for convenience
+  const firstSampleOutputPre = problemStatement.querySelector('.sample-test .output pre');
+  let sampleOutput = '';
+  if (firstSampleOutputPre) {
+    const divs = firstSampleOutputPre.querySelectorAll('div');
+    if (divs.length > 0) {
+      sampleOutput = Array.from(divs).map(d => d.textContent).join('\n').trim();
+    } else {
+      sampleOutput = firstSampleOutputPre.textContent.trim();
+    }
+  }
+
   // Extract problem tags from sidebar if available
   const tags = [];
   const tagNodes = document.querySelectorAll('.tag-box');
@@ -46,7 +58,7 @@ function extractProblemMetadata(problemStatement) {
     if (text) tags.push(text);
   });
 
-  return { title, timeLimit, memoryLimit, sampleInput, tags };
+  return { title, timeLimit, memoryLimit, sampleInput, sampleOutput, tags };
 }
 
 /**

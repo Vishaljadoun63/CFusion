@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import EditorToolbar from './EditorToolbar';
 import CodeEditor from './CodeEditor';
 import { getStarterTemplate } from './starterTemplates';
@@ -6,10 +6,14 @@ import {
   saveProblemCode,
   loadProblemCode,
   savePreferredLanguage,
-  loadPreferredLanguage
+  loadPreferredLanguage,
+  getTestCases,
+  saveTestCases
 } from '../services/storageService';
+import { extractSampleTestCases, createTestCase } from '../services/testCaseParser';
 import { runCode } from '../services/executionService';
-import { Play, Send, Terminal, Loader, CheckCircle, XCircle, AlertTriangle, Clock, Info } from 'lucide-react';
+import TestCasesPanel from './TestCasesPanel';
+import { Play, Send, Terminal, Loader, CheckSquare } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
 // Execution state machine values
@@ -18,6 +22,8 @@ const EXEC_STATUS = {
   IDLE: 'idle',
   RUNNING: 'running',
   SUCCESS: 'success',
+  FAILED: 'failed',
+  EXECUTED: 'executed',
   COMPILATION_ERROR: 'compilation_error',
   RUNTIME_ERROR: 'runtime_error',
   TIME_LIMIT: 'time_limit',
@@ -25,195 +31,154 @@ const EXEC_STATUS = {
 };
 
 const INITIAL_EXEC_STATE = {
-  status: EXEC_STATUS.IDLE,
+  testCaseId: null,
+  inputSnapshot: '',
+  expectedOutputSnapshot: '',
+  actualOutput: '',
   stdout: '',
+  status: EXEC_STATUS.IDLE,
   stderr: '',
   compile_output: '',
   time: null,
   memory: null,
-  statusDescription: ''
+  statusDescription: '',
+  executedAt: null
 };
 
 // ---------------------------------------------------------------------------
-// Output panel sub-components (pure render, no hooks)
+// Resolve execution status with output comparison
 // ---------------------------------------------------------------------------
-
-function StatusBadge({ status, statusDescription }) {
-  const cfg = {
-    [EXEC_STATUS.SUCCESS]:          { bg: '#10B981', label: 'Accepted' },
-    [EXEC_STATUS.COMPILATION_ERROR]:{ bg: '#F59E0B', label: 'Compilation Error' },
-    [EXEC_STATUS.RUNTIME_ERROR]:    { bg: '#EF4444', label: 'Runtime Error' },
-    [EXEC_STATUS.TIME_LIMIT]:       { bg: '#8B5CF6', label: 'Time Limit Exceeded' },
-    [EXEC_STATUS.ERROR]:            { bg: '#EF4444', label: statusDescription || 'Error' }
-  }[status] || { bg: '#6B7280', label: statusDescription || status };
-
-  return (
-    <span style={{
-      display: 'inline-block',
-      backgroundColor: cfg.bg,
-      color: '#fff',
-      fontSize: '11px',
-      fontWeight: 700,
-      padding: '2px 8px',
-      borderRadius: '4px',
-      letterSpacing: '0.03em'
-    }}>
-      {cfg.label}
-    </span>
-  );
-}
-
-function OutputBlock({ label, content, color = '#F8FAFC' }) {
-  if (!content || content.trim() === '') return null;
-  return (
-    <div style={{ marginTop: '8px' }}>
-      {label && (
-        <div style={{ fontSize: '10px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
-          {label}
-        </div>
-      )}
-      <pre style={{
-        margin: 0,
-        padding: '8px 10px',
-        backgroundColor: '#0B1120',
-        border: '1px solid #273449',
-        borderRadius: '4px',
-        fontFamily: "'JetBrains Mono', Consolas, monospace",
-        fontSize: '12px',
-        color,
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'break-all',
-        lineHeight: '1.6',
-        overflowX: 'auto',
-        maxHeight: '120px',
-        overflowY: 'auto'
-      }}>
-        {content}
-      </pre>
-    </div>
-  );
-}
-
-function IdlePanel() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748B', paddingTop: '4px' }}>
-      <Info style={{ width: '15px', height: '15px', flexShrink: 0 }} />
-      <span>Click <strong style={{ color: '#94A3B8' }}>Run Code</strong> to compile and execute your program.</span>
-    </div>
-  );
-}
-
-function RunningPanel({ statusDescription }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#94A3B8', paddingTop: '4px' }}>
-      <Loader style={{ width: '15px', height: '15px', flexShrink: 0, animation: 'cfusion-spin 1s linear infinite' }} />
-      <span>{statusDescription || 'Submitting code to execution engine…'}</span>
-    </div>
-  );
-}
-
-function SuccessPanel({ execState }) {
-  const { stdout, time, memory } = execState;
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-        <CheckCircle style={{ width: '14px', height: '14px', color: '#10B981', flexShrink: 0 }} />
-        <StatusBadge status={EXEC_STATUS.SUCCESS} />
-        {time  && <span style={{ fontSize: '11px', color: '#94A3B8' }}>⏱ {time}</span>}
-        {memory && <span style={{ fontSize: '11px', color: '#94A3B8' }}>🗂 {memory}</span>}
-      </div>
-      {stdout && stdout.trim() ? (
-        <OutputBlock content={stdout} color="#F8FAFC" />
-      ) : (
-        <div style={{ marginTop: '8px', fontSize: '12px', color: '#64748B', fontStyle: 'italic' }}>
-          Program finished with no output.
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CompilationErrorPanel({ execState }) {
-  const { compile_output, stderr } = execState;
-  const diag = compile_output || stderr || 'No diagnostic output available.';
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <AlertTriangle style={{ width: '14px', height: '14px', color: '#F59E0B', flexShrink: 0 }} />
-        <StatusBadge status={EXEC_STATUS.COMPILATION_ERROR} />
-      </div>
-      <OutputBlock label="Compiler Output" content={diag} color="#FCD34D" />
-    </div>
-  );
-}
-
-function RuntimeErrorPanel({ execState }) {
-  const { stderr, compile_output, statusDescription } = execState;
-  const info = stderr || compile_output || statusDescription || 'Runtime terminated unexpectedly.';
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <XCircle style={{ width: '14px', height: '14px', color: '#EF4444', flexShrink: 0 }} />
-        <StatusBadge status={EXEC_STATUS.RUNTIME_ERROR} statusDescription={statusDescription} />
-      </div>
-      <OutputBlock label="Runtime Output" content={info} color="#FCA5A5" />
-    </div>
-  );
-}
-
-function TimeLimitPanel() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <Clock style={{ width: '14px', height: '14px', color: '#8B5CF6', flexShrink: 0 }} />
-      <StatusBadge status={EXEC_STATUS.TIME_LIMIT} />
-      <span style={{ fontSize: '12px', color: '#94A3B8' }}>Your program exceeded the time limit.</span>
-    </div>
-  );
-}
-
-function GenericErrorPanel({ execState }) {
-  const { stderr, statusDescription } = execState;
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <XCircle style={{ width: '14px', height: '14px', color: '#EF4444', flexShrink: 0 }} />
-        <span style={{ fontSize: '12px', fontWeight: 700, color: '#EF4444' }}>{statusDescription || 'Error'}</span>
-      </div>
-      {stderr && stderr.trim() && (
-        <OutputBlock label="Details" content={stderr} color="#FCA5A5" />
-      )}
-    </div>
-  );
-}
-
-function OutputPanel({ execState }) {
-  switch (execState.status) {
-    case EXEC_STATUS.IDLE:             return <IdlePanel />;
-    case EXEC_STATUS.RUNNING:          return <RunningPanel statusDescription={execState.statusDescription} />;
-    case EXEC_STATUS.SUCCESS:          return <SuccessPanel execState={execState} />;
-    case EXEC_STATUS.COMPILATION_ERROR:return <CompilationErrorPanel execState={execState} />;
-    case EXEC_STATUS.RUNTIME_ERROR:    return <RuntimeErrorPanel execState={execState} />;
-    case EXEC_STATUS.TIME_LIMIT:       return <TimeLimitPanel />;
-    default:                           return <GenericErrorPanel execState={execState} />;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Map backend response → EXEC_STATUS
-// ---------------------------------------------------------------------------
-function mapResponseToStatus(response) {
-  if (!response || !response.success) {
-    // Distinguish compilation errors from other failures
-    if (response?.status === 'compilation_error') return EXEC_STATUS.COMPILATION_ERROR;
-    if (response?.status === 'runtime_error')     return EXEC_STATUS.RUNTIME_ERROR;
-    if (response?.status === 'time_limit')        return EXEC_STATUS.TIME_LIMIT;
+function resolveExecutionStatus(res, expectedOutputSnapshot) {
+  if (!res || !res.success) {
+    if (res?.status === 'compilation_error') return EXEC_STATUS.COMPILATION_ERROR;
+    if (res?.status === 'runtime_error')     return EXEC_STATUS.RUNTIME_ERROR;
+    if (res?.status === 'time_limit')        return EXEC_STATUS.TIME_LIMIT;
     return EXEC_STATUS.ERROR;
   }
-  if (response.status === 'success') return EXEC_STATUS.SUCCESS;
-  if (response.status === 'compilation_error') return EXEC_STATUS.COMPILATION_ERROR;
-  if (response.status === 'runtime_error')     return EXEC_STATUS.RUNTIME_ERROR;
-  if (response.status === 'time_limit')        return EXEC_STATUS.TIME_LIMIT;
-  return EXEC_STATUS.ERROR;
+
+  // Program executed successfully
+  if (expectedOutputSnapshot && expectedOutputSnapshot.trim()) {
+    const actual = typeof res.stdout === 'string' ? res.stdout.trim() : '';
+    const expected = expectedOutputSnapshot.trim();
+    return actual === expected ? EXEC_STATUS.SUCCESS : EXEC_STATUS.FAILED;
+  }
+
+  // Executed with no expected output to compare against
+  return EXEC_STATUS.EXECUTED;
+}
+
+// ---------------------------------------------------------------------------
+// Reconcile stored test cases with DOM sample test cases
+// ---------------------------------------------------------------------------
+export function reconcileTestCases(existingCases = [], domSamples = [], meta = {}) {
+  let changed = false;
+  const existingList = Array.isArray(existingCases) ? [...existingCases] : [];
+
+  // Build effective sample list from domSamples or meta fallback
+  let effectiveSamples = Array.isArray(domSamples) && domSamples.length > 0 ? domSamples : [];
+  if (effectiveSamples.length === 0 && (meta?.sampleInput || meta?.sampleOutput)) {
+    effectiveSamples = [
+      createTestCase({
+        id: 'sample_1',
+        name: 'Sample 1',
+        input: meta?.sampleInput || '',
+        expectedOutput: meta?.sampleOutput || '',
+        isSample: true
+      })
+    ];
+  }
+
+  // If nothing existed previously in storage, return effective samples
+  if (existingList.length === 0) {
+    const finalSamples = effectiveSamples.length > 0
+      ? effectiveSamples
+      : [
+          createTestCase({
+            id: 'sample_1',
+            name: 'Sample 1',
+            input: meta?.sampleInput || '',
+            expectedOutput: meta?.sampleOutput || '',
+            isSample: true
+          })
+        ];
+    return { reconciled: finalSamples, changed: true };
+  }
+
+  // Separate existing samples and existing custom cases
+  const existingSampleCases = existingList.filter(tc => tc.isSample);
+  const existingCustomCases = existingList.filter(tc => !tc.isSample);
+
+  const reconciledSamples = [];
+
+  // 1. Reconcile each effective sample against existing sample cases
+  effectiveSamples.forEach((domSample, idx) => {
+    const sampleName = `Sample ${idx + 1}`;
+    const existingMatch = existingSampleCases.find(
+      tc => tc.id === domSample.id || tc.name === domSample.name || tc.name === sampleName
+    );
+
+    if (existingMatch) {
+      let sampleCopy = { ...existingMatch };
+      let repaired = false;
+
+      // Repair missing or empty input from DOM
+      if ((!sampleCopy.input || !sampleCopy.input.trim()) && domSample.input && domSample.input.trim()) {
+        sampleCopy.input = domSample.input;
+        repaired = true;
+      }
+
+      // Repair missing or empty expectedOutput from DOM
+      if ((!sampleCopy.expectedOutput || !sampleCopy.expectedOutput.trim()) && domSample.expectedOutput && domSample.expectedOutput.trim()) {
+        sampleCopy.expectedOutput = domSample.expectedOutput;
+        repaired = true;
+      }
+
+      // Repair snapshot in existing execution result if already executed
+      if (
+        sampleCopy.result &&
+        sampleCopy.result.status &&
+        sampleCopy.result.status !== 'idle' &&
+        (!sampleCopy.result.expectedOutputSnapshot || !sampleCopy.result.expectedOutputSnapshot.trim()) &&
+        sampleCopy.expectedOutput
+      ) {
+        sampleCopy.result = {
+          ...sampleCopy.result,
+          expectedOutputSnapshot: sampleCopy.expectedOutput
+        };
+        repaired = true;
+      }
+
+      if (repaired) changed = true;
+      reconciledSamples.push(sampleCopy);
+    } else {
+      // New sample found from DOM: add it
+      reconciledSamples.push(domSample);
+      changed = true;
+    }
+  });
+
+  // If no effective samples were found from DOM/meta, preserve any existing sample cases
+  if (reconciledSamples.length === 0 && existingSampleCases.length > 0) {
+    reconciledSamples.push(...existingSampleCases);
+  }
+
+  // If still no samples at all, guarantee at least Sample 1
+  if (reconciledSamples.length === 0) {
+    reconciledSamples.push(
+      createTestCase({
+        id: 'sample_1',
+        name: 'Sample 1',
+        input: meta?.sampleInput || '',
+        expectedOutput: meta?.sampleOutput || '',
+        isSample: true
+      })
+    );
+    changed = true;
+  }
+
+  // Sample cases always appear first, followed by all preserved custom cases
+  const reconciled = [...reconciledSamples, ...existingCustomCases];
+  return { reconciled, changed };
 }
 
 // ---------------------------------------------------------------------------
@@ -223,15 +188,27 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
   const [currentLang, setCurrentLang] = useState('cpp17');
   const [code, setCode] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('stdin');
-  const [customInput, setCustomInput] = useState(meta?.sampleInput || '');
+  const [activeTab, setActiveTab] = useState('testcase'); // 'testcase' | 'testresult'
+  const [testCases, setTestCases] = useState([]);
+  const [selectedTestCaseId, setSelectedTestCaseId] = useState(null);
   const [theme, setTheme] = useState(initialTheme);
   const [execState, setExecState] = useState(INITIAL_EXEC_STATE);
   const [isRunning, setIsRunning] = useState(false);
+  const [isRunAllRunning, setIsRunAllRunning] = useState(false);
+  const [runProgress, setRunProgress] = useState(null);
+  const [runSummary, setRunSummary] = useState(null);
+  const [consoleHeight, setConsoleHeight] = useState(260);
 
   const editorInstanceRef = useRef(null);
   const saveTimeoutRef = useRef(null);
-  // Always holds the latest code value so handleRunCode closure sees fresh code
+  const abortRef = useRef(false);
+  const isRunningRef = useRef(false);
+  const isResizingRef = useRef(false);
+  const startYRef = useRef(0);
+  const startHeightRef = useRef(260);
+  const draftRef = useRef({});
+
+  // Always holds the latest code value so execution closure sees fresh code
   const codeRef = useRef(code);
   useEffect(() => { codeRef.current = code; }, [code]);
 
@@ -248,7 +225,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
     }
   }, []);
 
-  // Initialize language and load problem-specific code
+  // Initialize language and load problem-specific code and test cases
   useEffect(() => {
     async function initEditor() {
       const prefLang = await loadPreferredLanguage();
@@ -260,9 +237,126 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
       } else {
         setCode(getStarterTemplate(prefLang, meta?.title));
       }
+
+      // Initialize test-case foundation with automatic reconciliation
+      try {
+        const existingCases = await getTestCases(context.contestId, context.problemIndex);
+        const parsedSamples = extractSampleTestCases();
+        const { reconciled, changed } = reconcileTestCases(existingCases, parsedSamples, meta);
+
+        setTestCases(reconciled);
+        const firstId = reconciled[0]?.id || null;
+        setSelectedTestCaseId(firstId);
+
+        if (reconciled[0]?.result && reconciled[0].result.status && reconciled[0].result.status !== 'idle') {
+          setExecState({
+            ...INITIAL_EXEC_STATE,
+            ...reconciled[0].result
+          });
+        }
+
+        if (changed) {
+          await saveTestCases(context.contestId, context.problemIndex, reconciled);
+        }
+
+        // Delayed check in case problem DOM loaded sample-test slightly after React mounted
+        if (parsedSamples.length === 0) {
+          setTimeout(async () => {
+            const retrySamples = extractSampleTestCases();
+            if (retrySamples && retrySamples.length > 0) {
+              setTestCases(current => {
+                const retryRes = reconcileTestCases(current, retrySamples, meta);
+                if (retryRes.changed) {
+                  saveTestCases(context.contestId, context.problemIndex, retryRes.reconciled);
+                  return retryRes.reconciled;
+                }
+                return current;
+              });
+            }
+          }, 350);
+        }
+      } catch (tcErr) {
+        console.warn('[CFusion] Test-case initialization error:', tcErr);
+      }
     }
     initEditor();
   }, [context.contestId, context.problemIndex]);
+
+  // Handle selecting a test case
+  const handleSelectTestCase = (id) => {
+    setSelectedTestCaseId(id);
+    const found = testCases.find(tc => tc.id === id);
+    if (found && found.result && found.result.status && found.result.status !== 'idle') {
+      setExecState({
+        ...INITIAL_EXEC_STATE,
+        ...found.result
+      });
+    }
+  };
+
+  // Track unsaved drafts from TestCasesPanel
+  const handleDraftChange = ({ testCaseId, input, expectedOutput, isDirty }) => {
+    if (!testCaseId) return;
+    draftRef.current[testCaseId] = { input, expectedOutput, isDirty };
+  };
+
+  // Handle adding a new custom test case
+  const handleAddTestCase = async () => {
+    const customCount = testCases.filter(tc => !tc.isSample).length + 1;
+    let nextName = `Custom ${customCount}`;
+    let counter = customCount;
+    while (testCases.some(tc => tc.name === nextName)) {
+      counter++;
+      nextName = `Custom ${counter}`;
+    }
+
+    const newCase = createTestCase({
+      name: nextName,
+      input: '',
+      expectedOutput: '',
+      isSample: false
+    });
+
+    const nextTestCases = [...testCases, newCase];
+    setTestCases(nextTestCases);
+    setSelectedTestCaseId(newCase.id);
+    await saveTestCases(context.contestId, context.problemIndex, nextTestCases);
+  };
+
+  // Handle updating a test case
+  const handleUpdateTestCase = async (updatedCase) => {
+    const nextTestCases = testCases.map(tc => tc.id === updatedCase.id ? updatedCase : tc);
+    const res = await saveTestCases(context.contestId, context.problemIndex, nextTestCases);
+    if (res && res.success !== false) {
+      setTestCases(nextTestCases);
+      if (draftRef.current[updatedCase.id]) {
+        draftRef.current[updatedCase.id].isDirty = false;
+      }
+      return { success: true };
+    } else {
+      return { success: false, error: res?.error || 'Validation error' };
+    }
+  };
+
+  // Handle deleting a test case
+  const handleDeleteTestCase = async (id) => {
+    const nextTestCases = testCases.filter(tc => tc.id !== id);
+    await saveTestCases(context.contestId, context.problemIndex, nextTestCases);
+    setTestCases(nextTestCases);
+    delete draftRef.current[id];
+
+    if (selectedTestCaseId === id) {
+      const nextSelected = nextTestCases[0] || null;
+      setSelectedTestCaseId(nextSelected ? nextSelected.id : null);
+      if (nextSelected && nextSelected.result && nextSelected.result.status !== 'idle') {
+        setExecState({
+          ...INITIAL_EXEC_STATE,
+          ...nextSelected.result
+        });
+      }
+    }
+    return { success: true };
+  };
 
   // Handle language switch
   const handleLanguageChange = async (newLang) => {
@@ -279,7 +373,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
     }
   };
 
-  // Debounced auto-save (unchanged)
+  // Debounced auto-save
   const handleCodeChange = (newCode) => {
     setCode(newCode);
     setIsSaving(true);
@@ -325,53 +419,360 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
     }
   };
 
-  // Run Code handler
-  const handleRunCode = useCallback(async () => {
-    if (isRunning) return; // Guard against double-click
+  // Vertical resizer mouse handlers
+  const handleMouseDownResize = (e) => {
+    e.preventDefault();
+    isResizingRef.current = true;
+    startYRef.current = e.clientY;
+    startHeightRef.current = consoleHeight;
 
-    // Switch console to output tab
-    setActiveTab('stdout');
+    const handleMouseMove = (moveEvent) => {
+      if (!isResizingRef.current) return;
+      const deltaY = startYRef.current - moveEvent.clientY;
+      const maxHeight = Math.floor(window.innerHeight * 0.65);
+      const newHeight = Math.min(Math.max(140, startHeightRef.current + deltaY), maxHeight);
+      setConsoleHeight(newHeight);
+    };
+
+    const handleMouseUp = () => {
+      isResizingRef.current = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleDoubleClickResize = () => {
+    setConsoleHeight(260);
+  };
+
+  // -------------------------------------------------------------------------
+  // RUN (Executes the selected test case with exact snapshots)
+  // -------------------------------------------------------------------------
+  const handleRun = useCallback(async () => {
+    if (isRunningRef.current) return;
+
+    let targetCase = testCases.find(tc => tc.id === selectedTestCaseId) || testCases[0];
+    if (!targetCase) return;
+
+    // Synchronize and auto-save any unsaved draft edits prior to execution
+    const activeDraft = draftRef.current[targetCase.id];
+    let workingCases = [...testCases];
+    if (activeDraft && activeDraft.isDirty) {
+      targetCase = {
+        ...targetCase,
+        input: activeDraft.input,
+        expectedOutput: activeDraft.expectedOutput
+      };
+      workingCases = workingCases.map(tc => tc.id === targetCase.id ? targetCase : tc);
+      setTestCases(workingCases);
+      await saveTestCases(context.contestId, context.problemIndex, workingCases);
+      activeDraft.isDirty = false;
+    }
+
+    // Capture exact immutable snapshots BEFORE execution begins
+    const inputSnapshot = targetCase.input || '';
+    const expectedOutputSnapshot = targetCase.expectedOutput || '';
+
+    // Switch console to Test Result tab automatically
+    setActiveTab('testresult');
+    isRunningRef.current = true;
     setIsRunning(true);
+
+    // Set running state on targeted test case
+    setTestCases(prev => prev.map(tc => tc.id === targetCase.id ? {
+      ...tc,
+      result: { ...(tc.result || {}), status: 'running' }
+    } : tc));
+
     setExecState({
       ...INITIAL_EXEC_STATE,
+      testCaseId: targetCase.id,
+      inputSnapshot,
+      expectedOutputSnapshot,
       status: EXEC_STATUS.RUNNING,
-      statusDescription: 'Submitting code to execution engine…'
+      statusDescription: `Running ${targetCase.name}…`
     });
 
-    // Prefer live editor value over React state (avoids stale closure)
     const latestCode = editorInstanceRef.current
       ? editorInstanceRef.current.getValue()
       : codeRef.current;
+    const targetLang = currentLang;
 
     try {
-      const result = await runCode(currentLang, latestCode, customInput);
+      const res = await runCode(targetLang, latestCode, inputSnapshot);
+      const resolvedStatus = resolveExecutionStatus(res, expectedOutputSnapshot);
 
-      const resolvedStatus = mapResponseToStatus(result);
-      setExecState({
-        status:            resolvedStatus,
-        stdout:            typeof result.stdout === 'string'         ? result.stdout         : '',
-        stderr:            typeof result.stderr === 'string'         ? result.stderr         : '',
-        compile_output:    typeof result.compile_output === 'string' ? result.compile_output : '',
-        time:              result.time   || null,
-        memory:            result.memory || null,
-        statusDescription: result.statusDescription || result.status || ''
+      const resultObj = {
+        testCaseId: targetCase.id,
+        inputSnapshot,
+        expectedOutputSnapshot,
+        actualOutput: typeof res.stdout === 'string' ? res.stdout : '',
+        stdout: typeof res.stdout === 'string' ? res.stdout : '',
+        status: resolvedStatus,
+        stderr: typeof res.stderr === 'string' ? res.stderr : '',
+        compile_output: typeof res.compile_output === 'string' ? res.compile_output : '',
+        time: res.time || null,
+        memory: res.memory || null,
+        statusDescription: res.statusDescription || res.status || '',
+        executedAt: Date.now()
+      };
+
+      setTestCases(prev => {
+        const next = prev.map(tc => tc.id === targetCase.id ? { ...tc, result: resultObj } : tc);
+        saveTestCases(context.contestId, context.problemIndex, next);
+        return next;
       });
+
+      setExecState(resultObj);
     } catch (err) {
-      // Should never reach here (runCode always resolves), but safety net
-      console.error('[CFusion] Unexpected execution error:', err);
-      setExecState({
-        status:            EXEC_STATUS.ERROR,
-        stdout:            '',
-        stderr:            err.message || String(err),
-        compile_output:    '',
-        time:              null,
-        memory:            null,
-        statusDescription: 'Unexpected Error'
+      console.error('[CFusion] Test execution error:', err);
+      const errorResult = {
+        testCaseId: targetCase.id,
+        inputSnapshot,
+        expectedOutputSnapshot,
+        actualOutput: '',
+        stdout: '',
+        status: EXEC_STATUS.ERROR,
+        stderr: err.message || String(err),
+        compile_output: '',
+        time: null,
+        memory: null,
+        statusDescription: 'Server Error',
+        executedAt: Date.now()
+      };
+      setTestCases(prev => {
+        const next = prev.map(tc => tc.id === targetCase.id ? { ...tc, result: errorResult } : tc);
+        saveTestCases(context.contestId, context.problemIndex, next);
+        return next;
       });
+      setExecState(errorResult);
     } finally {
+      isRunningRef.current = false;
       setIsRunning(false);
     }
-  }, [isRunning, currentLang, customInput]);
+  }, [testCases, selectedTestCaseId, currentLang, context.contestId, context.problemIndex]);
+
+  // -------------------------------------------------------------------------
+  // RUN ALL (Sequential execution of all saved test cases)
+  // -------------------------------------------------------------------------
+  const handleRunAllTests = async () => {
+    if (isRunningRef.current || testCases.length === 0) return;
+
+    setActiveTab('testresult');
+    isRunningRef.current = true;
+    abortRef.current = false;
+    setIsRunning(true);
+    setIsRunAllRunning(true);
+    setRunSummary(null);
+
+    const langSnapshot = currentLang;
+    const codeSnapshot = editorInstanceRef.current
+      ? editorInstanceRef.current.getValue()
+      : codeRef.current;
+
+    // Apply any pending dirty drafts before starting Run All
+    let currentList = testCases.map(tc => {
+      const draft = draftRef.current[tc.id];
+      if (draft && draft.isDirty) {
+        draft.isDirty = false;
+        return { ...tc, input: draft.input, expectedOutput: draft.expectedOutput };
+      }
+      return { ...tc };
+    });
+    setTestCases(currentList);
+    await saveTestCases(context.contestId, context.problemIndex, currentList);
+
+    let executed = 0;
+    let accepted = 0;
+    let failed = 0;
+    let compilationErrors = 0;
+    let runtimeErrors = 0;
+    let timeLimit = 0;
+    let skipped = 0;
+    let wasAborted = false;
+
+    try {
+      for (let i = 0; i < currentList.length; i++) {
+        // Check if Stop was clicked
+        if (abortRef.current) {
+          wasAborted = true;
+          for (let j = i; j < currentList.length; j++) {
+            currentList[j] = {
+              ...currentList[j],
+              result: {
+                testCaseId: currentList[j].id,
+                inputSnapshot: currentList[j].input || '',
+                expectedOutputSnapshot: currentList[j].expectedOutput || '',
+                actualOutput: '',
+                stdout: '',
+                status: 'skipped',
+                statusDescription: 'Run stopped by user',
+                stderr: '',
+                compile_output: '',
+                time: null,
+                memory: null,
+                executedAt: Date.now()
+              }
+            };
+            skipped++;
+          }
+          setTestCases([...currentList]);
+          await saveTestCases(context.contestId, context.problemIndex, currentList);
+          break;
+        }
+
+        const tc = currentList[i];
+        setRunProgress({ index: i, total: currentList.length, currentName: tc.name });
+
+        // Capture immutable snapshot BEFORE execution
+        const inputSnapshot = tc.input || '';
+        const expectedOutputSnapshot = tc.expectedOutput || '';
+
+        // Mark current test case as running
+        currentList[i] = {
+          ...tc,
+          result: { ...(tc.result || {}), status: 'running' }
+        };
+        setTestCases([...currentList]);
+
+        setExecState({
+          ...INITIAL_EXEC_STATE,
+          testCaseId: tc.id,
+          inputSnapshot,
+          expectedOutputSnapshot,
+          status: EXEC_STATUS.RUNNING,
+          statusDescription: `Running test ${i + 1}/${currentList.length}: ${tc.name}…`
+        });
+
+        const res = await runCode(langSnapshot, codeSnapshot, inputSnapshot);
+        executed++;
+
+        const resolvedStatus = resolveExecutionStatus(res, expectedOutputSnapshot);
+        const resultObj = {
+          testCaseId: tc.id,
+          inputSnapshot,
+          expectedOutputSnapshot,
+          actualOutput: typeof res.stdout === 'string' ? res.stdout : '',
+          stdout: typeof res.stdout === 'string' ? res.stdout : '',
+          status: resolvedStatus,
+          stderr: typeof res.stderr === 'string' ? res.stderr : '',
+          compile_output: typeof res.compile_output === 'string' ? res.compile_output : '',
+          time: res.time || null,
+          memory: res.memory || null,
+          statusDescription: res.statusDescription || res.status || '',
+          executedAt: Date.now()
+        };
+
+        currentList[i] = { ...currentList[i], result: resultObj };
+        setTestCases([...currentList]);
+        // Persist immediately after each completed case
+        await saveTestCases(context.contestId, context.problemIndex, currentList);
+
+        if (selectedTestCaseId === tc.id || (!selectedTestCaseId && i === 0)) {
+          setExecState(resultObj);
+        }
+
+        // Tally statistics
+        if (resolvedStatus === 'success' || resolvedStatus === 'passed') {
+          accepted++;
+        } else if (resolvedStatus === 'failed') {
+          failed++;
+        } else if (resolvedStatus === 'compilation_error') {
+          compilationErrors++;
+        } else if (resolvedStatus === 'runtime_error') {
+          runtimeErrors++;
+        } else if (resolvedStatus === 'time_limit') {
+          timeLimit++;
+        }
+
+        // Compilation Error halts remaining test cases
+        if (resolvedStatus === 'compilation_error') {
+          for (let j = i + 1; j < currentList.length; j++) {
+            currentList[j] = {
+              ...currentList[j],
+              result: {
+                testCaseId: currentList[j].id,
+                inputSnapshot: currentList[j].input || '',
+                expectedOutputSnapshot: currentList[j].expectedOutput || '',
+                actualOutput: '',
+                stdout: '',
+                status: 'skipped',
+                statusDescription: 'Skipped due to Compilation Error',
+                stderr: '',
+                compile_output: '',
+                time: null,
+                memory: null,
+                executedAt: Date.now()
+              }
+            };
+            skipped++;
+          }
+          setTestCases([...currentList]);
+          await saveTestCases(context.contestId, context.problemIndex, currentList);
+          setExecState(resultObj);
+          break;
+        }
+
+        // Server offline error halts remaining test cases
+        if (res.statusDescription === 'Server Unavailable' || (!res.success && res.status === 'error' && (res.stderr?.includes('Failed to reach') || res.stderr?.includes('timed out')))) {
+          for (let j = i + 1; j < currentList.length; j++) {
+            currentList[j] = {
+              ...currentList[j],
+              result: {
+                testCaseId: currentList[j].id,
+                inputSnapshot: currentList[j].input || '',
+                expectedOutputSnapshot: currentList[j].expectedOutput || '',
+                actualOutput: '',
+                stdout: '',
+                status: 'skipped',
+                statusDescription: 'Skipped due to Server Unavailable',
+                stderr: '',
+                compile_output: '',
+                time: null,
+                memory: null,
+                executedAt: Date.now()
+              }
+            };
+            skipped++;
+          }
+          setTestCases([...currentList]);
+          await saveTestCases(context.contestId, context.problemIndex, currentList);
+          break;
+        }
+
+        // Sequential delay: 2100ms before next test case to respect 30 req/min rate limit
+        if (i < currentList.length - 1 && !abortRef.current) {
+          await new Promise(resolve => setTimeout(resolve, 2100));
+        }
+      }
+    } catch (allErr) {
+      console.error('[CFusion] Run all execution loop error:', allErr);
+    } finally {
+      setRunSummary({
+        total: currentList.length,
+        executed,
+        accepted,
+        failed,
+        compilationErrors,
+        runtimeErrors,
+        timeLimit,
+        skipped,
+        wasAborted
+      });
+      isRunningRef.current = false;
+      setIsRunning(false);
+      setIsRunAllRunning(false);
+      setRunProgress(null);
+    }
+  };
+
+  // Stop running all test cases
+  const handleStopRunAll = () => {
+    abortRef.current = true;
+  };
 
   // -------------------------------------------------------------------------
   // Render
@@ -393,7 +794,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
         position: 'relative'
       }}
     >
-      {/* Spinner keyframe injected once */}
+      {/* Keyframe animation for spinning loader */}
       <style>{`@keyframes cfusion-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
 
       {/* 1. Professional Editor Toolbar */}
@@ -428,74 +829,102 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
         />
       </div>
 
-      {/* 3. Bottom Console Panel */}
+      {/* 3. Horizontal Resizer Divider between Monaco and Testing Console */}
+      <div
+        className="cfusion-console-resizer"
+        onMouseDown={handleMouseDownResize}
+        onDoubleClick={handleDoubleClickResize}
+        title="Drag to resize console (double-click to reset)"
+      />
+
+      {/* 4. Bottom Testing Console Panel */}
       <div
         className="cfusion-console-panel"
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: '220px',
-          minHeight: '160px',
-          maxHeight: '45%',
+          height: `${consoleHeight}px`,
+          minHeight: '150px',
+          maxHeight: '65%',
           backgroundColor: '#111827',
-          borderTop: '1px solid #273449',
-          flexShrink: 0
+          flexShrink: 0,
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        {/* Console Tabs Header */}
+        {/* Console Tabs Header (Only TWO Primary Tabs: Testcase & Test Result) */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            height: '38px',
-            minHeight: '38px',
+            height: '36px',
+            minHeight: '36px',
             backgroundColor: '#172033',
             borderBottom: '1px solid #273449',
             padding: '0 12px',
-            userSelect: 'none'
+            userSelect: 'none',
+            flexShrink: 0
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {/* Tab 1: Testcase */}
             <button
-              onClick={() => setActiveTab('stdin')}
+              onClick={() => setActiveTab('testcase')}
               className="cfusion-btn"
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
                 padding: '4px 10px',
                 fontSize: '12px',
                 fontWeight: 600,
-                borderRadius: '6px',
+                borderRadius: '5px',
                 border: 'none',
-                backgroundColor: activeTab === 'stdin' ? '#111827' : 'transparent',
-                color: activeTab === 'stdin' ? '#38BDF8' : '#94A3B8',
+                backgroundColor: activeTab === 'testcase' ? '#111827' : 'transparent',
+                color: activeTab === 'testcase' ? '#38BDF8' : '#94A3B8',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              Custom Input (stdin)
+              <CheckSquare size={13} />
+              <span>Testcase</span>
             </button>
+
+            {/* Tab 2: Test Result */}
             <button
-              onClick={() => setActiveTab('stdout')}
+              onClick={() => setActiveTab('testresult')}
               className="cfusion-btn"
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
                 padding: '4px 10px',
                 fontSize: '12px',
                 fontWeight: 600,
-                borderRadius: '6px',
+                borderRadius: '5px',
                 border: 'none',
-                backgroundColor: activeTab === 'stdout' ? '#111827' : 'transparent',
-                color: activeTab === 'stdout' ? '#38BDF8' : '#94A3B8',
+                backgroundColor: activeTab === 'testresult' ? '#111827' : 'transparent',
+                color: activeTab === 'testresult' ? '#38BDF8' : '#94A3B8',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              Output (stdout)
+              <Terminal size={13} />
+              <span>Test Result</span>
             </button>
           </div>
 
-          {/* Status indicator */}
+          {/* Status indicator on right */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94A3B8' }}>
-            {isRunningStatus ? (
+            {isRunAllRunning ? (
+              <>
+                <Loader style={{ width: '12px', height: '12px', color: '#6366F1', animation: 'cfusion-spin 1s linear infinite' }} />
+                <span style={{ color: '#6366F1' }}>
+                  {runProgress ? `Running ${runProgress.index + 1}/${runProgress.total}…` : 'Running All…'}
+                </span>
+              </>
+            ) : isRunningStatus ? (
               <>
                 <Loader style={{ width: '12px', height: '12px', color: '#6366F1', animation: 'cfusion-spin 1s linear infinite' }} />
                 <span style={{ color: '#6366F1' }}>Executing…</span>
@@ -505,6 +934,11 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
                 <span style={{ color: '#10B981' }}>Accepted</span>
               </>
+            ) : execState.status === EXEC_STATUS.FAILED ? (
+              <>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#EF4444', display: 'inline-block' }}></span>
+                <span style={{ color: '#EF4444' }}>Wrong Answer</span>
+              </>
             ) : execState.status !== EXEC_STATUS.IDLE ? (
               <>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#EF4444', display: 'inline-block' }}></span>
@@ -513,101 +947,100 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
             ) : (
               <>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
-                <span>Monaco Ready</span>
+                <span>Ready</span>
               </>
             )}
           </div>
         </div>
 
-        {/* Console Body */}
+        {/* Console Body: Renders TestCasesPanel with activeTab */}
         <div
           style={{
             flex: '1 1 0%',
-            padding: '12px',
+            padding: '10px 12px',
             overflow: 'hidden',
             backgroundColor: '#0B1120',
-            fontFamily: "'JetBrains Mono', Consolas, monospace",
-            fontSize: '12px'
+            fontSize: '12px',
+            minHeight: 0
           }}
         >
-          {activeTab === 'stdin' ? (
-            <textarea
-              value={customInput}
-              onChange={(e) => setCustomInput(e.target.value)}
-              placeholder="Enter standard input (stdin)..."
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'transparent',
-                color: '#F8FAFC',
-                border: 'none',
-                outline: 'none',
-                resize: 'none',
-                fontFamily: 'inherit',
-                fontSize: '13px',
-                lineHeight: '1.6'
-              }}
-              spellCheck={false}
-            />
-          ) : (
-            <div style={{ height: '100%', overflowY: 'auto', lineHeight: '1.6' }}>
-              <OutputPanel execState={execState} />
-            </div>
-          )}
+          <TestCasesPanel
+            activeTab={activeTab}
+            testCases={testCases}
+            selectedTestCaseId={selectedTestCaseId}
+            onSelectTestCase={handleSelectTestCase}
+            onAddTestCase={handleAddTestCase}
+            onUpdateTestCase={handleUpdateTestCase}
+            onDeleteTestCase={handleDeleteTestCase}
+            onDraftChange={handleDraftChange}
+            onRunAllTests={handleRunAllTests}
+            onStopRunAll={handleStopRunAll}
+            execState={execState}
+            isRunning={isRunning}
+            isRunAllRunning={isRunAllRunning}
+            runProgress={runProgress}
+            runSummary={runSummary}
+          />
         </div>
 
-        {/* Action Bar (Run & Submit) */}
+        {/* 5. LeetCode-Style Action Bar: Judge0 info on Left, [ Run ] [ Submit ] on Right */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            height: '44px',
-            minHeight: '44px',
+            height: '42px',
+            minHeight: '42px',
             backgroundColor: '#111827',
             borderTop: '1px solid #273449',
             padding: '0 12px',
-            flexShrink: 0
+            flexShrink: 0,
+            userSelect: 'none'
           }}
         >
+          {/* Left: Backend status */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94A3B8' }}>
-            <Terminal style={{ width: '14px', height: '14px', color: '#818CF8' }} />
+            <Terminal style={{ width: '13px', height: '13px', color: '#818CF8' }} />
             <span>Judge0 · {currentLang}</span>
+            {isRunAllRunning && runProgress && (
+              <span style={{ color: '#818CF8', marginLeft: '4px' }}>
+                ({runProgress.index + 1}/{runProgress.total})
+              </span>
+            )}
           </div>
 
+          {/* Right: Only TWO primary execution actions: [ Run ] [ Submit ] */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Run Code */}
+            {/* Run Button (Executes currently selected test case) */}
             <button
-              onClick={handleRunCode}
-              disabled={isRunning}
+              onClick={handleRun}
+              disabled={isRunning || testCases.length === 0}
               className="cfusion-btn"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '5px 12px',
+                padding: '5px 14px',
                 fontSize: '12px',
                 fontWeight: 600,
                 borderRadius: '6px',
-                backgroundColor: isRunning ? '#4F46E5' : '#6366F1',
-                color: '#FFFFFF',
-                border: `1px solid ${isRunning ? '#4F46E5' : '#6366F1'}`,
-                cursor: isRunning ? 'not-allowed' : 'pointer',
-                opacity: isRunning ? 0.75 : 1,
-                transition: 'all 0.15s ease',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                backgroundColor: isRunning ? '#1E293B' : '#4F46E5',
+                color: isRunning ? '#64748B' : '#FFFFFF',
+                border: `1px solid ${isRunning ? '#273449' : '#4F46E5'}`,
+                cursor: isRunning || testCases.length === 0 ? 'not-allowed' : 'pointer',
+                transition: 'all 0.15s ease'
               }}
-              title={isRunning ? 'Execution in progress…' : 'Compile and run your code'}
+              title="Execute the selected test case"
             >
-              {isRunning ? (
-                <Loader style={{ width: '12px', height: '12px', animation: 'cfusion-spin 1s linear infinite' }} />
+              {isRunning && !isRunAllRunning ? (
+                <Loader size={12} style={{ animation: 'cfusion-spin 1s linear infinite' }} />
               ) : (
-                <Play style={{ width: '12px', height: '12px', fill: 'currentColor' }} />
+                <Play size={12} fill="currentColor" />
               )}
-              <span>{isRunning ? 'Running…' : 'Run Code'}</span>
+              <span>{isRunning && !isRunAllRunning ? 'Running…' : 'Run'}</span>
             </button>
 
-            {/* Submit to Codeforces */}
+            {/* Submit Button (Submits code to Codeforces) */}
             <button
               onClick={handleSubmit}
               className="cfusion-btn"
@@ -623,12 +1056,11 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 color: '#FFFFFF',
                 border: '1px solid #10B981',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                transition: 'all 0.15s ease'
               }}
               title="Submit code to Codeforces"
             >
-              <Send style={{ width: '12px', height: '12px' }} />
+              <Send size={12} />
               <span>Submit</span>
             </button>
           </div>
