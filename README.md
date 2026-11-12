@@ -101,7 +101,7 @@ Write solutions, select programming languages, execute code, and validate sample
 
 Save, search, filter, and manage your previously written solutions.
 
-![CFusion My Codes](screenshots/my-codes.png)
+![CFusion My Codes](screenshots/mycodes.png)
 
 ---
 
