@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
   "name": "CFusion - Codeforces Reimagined",
-  "version": "0.1.0",
-  "description": "Transforms Codeforces into a modern competitive programming workspace with dark mode, Monaco Editor, and sleek UI.",
+  "version": "1.0.0",
+  "description": "A modern Codeforces workspace featuring Monaco Editor, split-screen coding, custom test cases, code library, and cloud-based code execution.",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
-    "*://codeforces.com/*",
-    "*://*.codeforces.com/*",
-    "http://127.0.0.1:3001/*"
+      "*://codeforces.com/*",
+      "*://*.codeforces.com/*",
+      "https://cfusion-api.onrender.com/*"
   ],
   "action": {
     "default_popup": "index.html",

@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  * @param {function} sendResponse - Chrome runtime sendResponse callback
  */
 async function handleExecuteCode(payload, sendResponse) {
-  const BACKEND_URL = 'http://127.0.0.1:3001/api/execute';
+  const BACKEND_URL = 'https://cfusion-api.onrender.com/api/execute';
   const TIMEOUT_MS = 25000; // 25s — matches server polling ceiling
 
   // --- Validation ---

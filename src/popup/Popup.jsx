@@ -75,7 +75,7 @@ export default function Popup() {
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-base tracking-tight text-white">CFusion</span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#1A1A1A] text-[#A1A1AA] border border-[#333333]">
-                v0.1.0
+                v1.0.0
               </span>
             </div>
             <p className="text-[11px] text-[#A1A1AA] -mt-0.5">Codeforces Reimagined</p>
