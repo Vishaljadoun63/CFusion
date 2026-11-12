@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CFusion - Codeforces Reimagined",
   "version": "1.0.0",
-  "description": "A modern Codeforces workspace featuring Monaco Editor, split-screen coding, custom test cases, code library, and cloud-based code execution.",
+  "description": "Modern Codeforces workspace with Monaco Editor, split-screen coding, custom tests, code library, and cloud execution.",
   "permissions": [
     "storage"
   ],
