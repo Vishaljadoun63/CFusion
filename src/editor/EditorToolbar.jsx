@@ -40,8 +40,8 @@ export default function EditorToolbar({
         height: '42px',
         minHeight: '42px',
         maxHeight: '42px',
-        backgroundColor: '#172033',
-        borderBottom: '1px solid #273449',
+        backgroundColor: '#111111',
+        borderBottom: '1px solid #292929',
         padding: '0 12px',
         flexShrink: 0,
         userSelect: 'none',
@@ -55,18 +55,17 @@ export default function EditorToolbar({
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            backgroundColor: '#111827',
-            color: '#F8FAFC',
+            backgroundColor: '#151515',
+            color: '#E5E5E5',
             fontSize: '12px',
             fontFamily: "'JetBrains Mono', Consolas, monospace",
             padding: '5px 12px',
-            borderRadius: '6px 6px 0 0',
-            borderTop: '2px solid #6366F1',
-            fontWeight: 600,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+            borderRadius: '5px 5px 0 0',
+            borderTop: '2px solid #F59E0B',
+            fontWeight: 600
           }}
         >
-          <FileCode style={{ color: '#818CF8', width: '14px', height: '14px' }} />
+          <FileCode style={{ color: '#F59E0B', width: '13px', height: '13px' }} />
           <span>{langMeta.filename}</span>
         </div>
 
@@ -75,8 +74,8 @@ export default function EditorToolbar({
           {isSaving ? (
             <span style={{ color: '#F59E0B' }}>Saving...</span>
           ) : (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#10B981' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#71717A' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#22C55E', display: 'inline-block' }}></span>
               <span>Saved</span>
             </span>
           )}
@@ -87,31 +86,31 @@ export default function EditorToolbar({
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <LanguageSelector currentLang={currentLang} onLanguageChange={onLanguageChange} />
 
-        {/* Save Code Action */}
+        {/* Save Code Action (Primary) */}
         <button
           onClick={onOpenSaveModal}
-          className="cfusion-btn"
+          className="cfusion-btn cfusion-btn-primary"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '5px',
-            padding: '4px 10px',
+            padding: '4px 11px',
             fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            backgroundColor: '#0B1120',
-            color: '#E2E8F0',
-            border: '1px solid #273449',
+            fontWeight: 600,
+            borderRadius: '5px',
+            backgroundColor: '#1A1A1A',
+            color: '#FFFFFF',
+            border: '1px solid #333333',
             cursor: 'pointer',
             transition: 'all 0.15s ease'
           }}
           title="Save this code to your Personal Code Library"
         >
-          <Bookmark style={{ width: '12px', height: '12px', color: '#818CF8' }} />
+          <Bookmark style={{ width: '12px', height: '12px', color: '#F59E0B' }} />
           <span>Save Code</span>
         </button>
 
-        {/* Reset Code */}
+        {/* Reset Code (Secondary) */}
         <button
           onClick={handleReset}
           className="cfusion-btn"
@@ -122,23 +121,23 @@ export default function EditorToolbar({
             padding: '4px 10px',
             fontSize: '12px',
             fontWeight: 500,
-            borderRadius: '6px',
-            backgroundColor: '#0B1120',
-            color: '#E2E8F0',
-            border: '1px solid #273449',
+            borderRadius: '5px',
+            backgroundColor: '#151515',
+            color: '#A1A1AA',
+            border: '1px solid #292929',
             cursor: 'pointer',
             transition: 'all 0.15s ease'
           }}
           title="Reset code to original starter template"
         >
           <RotateCcw
-            style={{ width: '12px', height: '12px', color: resetting ? '#F59E0B' : '#94A3B8' }}
+            style={{ width: '12px', height: '12px', color: resetting ? '#F59E0B' : '#71717A' }}
             className={resetting ? 'animate-spin' : ''}
           />
           <span>{resetting ? 'Reset!' : 'Reset'}</span>
         </button>
 
-        {/* Copy Code */}
+        {/* Copy Code (Secondary) */}
         <button
           onClick={handleCopy}
           className="cfusion-btn"
@@ -149,19 +148,19 @@ export default function EditorToolbar({
             padding: '4px 10px',
             fontSize: '12px',
             fontWeight: 500,
-            borderRadius: '6px',
-            backgroundColor: copied ? '#10B981' : '#0B1120',
-            color: copied ? '#FFFFFF' : '#E2E8F0',
-            border: copied ? '1px solid #10B981' : '1px solid #273449',
+            borderRadius: '5px',
+            backgroundColor: copied ? '#22C55E' : '#151515',
+            color: copied ? '#111111' : '#A1A1AA',
+            border: copied ? '1px solid #22C55E' : '1px solid #292929',
             cursor: 'pointer',
             transition: 'all 0.15s ease'
           }}
           title="Copy current code to clipboard"
         >
           {copied ? (
-            <Check style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
+            <Check style={{ width: '12px', height: '12px', color: '#111111' }} />
           ) : (
-            <Copy style={{ width: '12px', height: '12px', color: '#94A3B8' }} />
+            <Copy style={{ width: '12px', height: '12px', color: '#71717A' }} />
           )}
           <span>{copied ? 'Copied!' : 'Copy'}</span>
         </button>

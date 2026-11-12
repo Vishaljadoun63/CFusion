@@ -9,10 +9,10 @@ export default function LanguageSelector({ currentLang, onLanguageChange }) {
         onChange={(e) => onLanguageChange(e.target.value)}
         className="cfusion-select"
         style={{
-          backgroundColor: '#0B1120',
-          color: '#F8FAFC',
-          border: '1px solid #273449',
-          borderRadius: '6px',
+          backgroundColor: '#111111',
+          color: '#E5E5E5',
+          border: '1px solid #292929',
+          borderRadius: '5px',
           padding: '4px 10px',
           fontSize: '12px',
           fontWeight: 600,
@@ -27,7 +27,7 @@ export default function LanguageSelector({ currentLang, onLanguageChange }) {
           <option
             key={lang.id}
             value={lang.id}
-            style={{ backgroundColor: '#111827', color: '#F8FAFC' }}
+            style={{ backgroundColor: '#151515', color: '#E5E5E5' }}
           >
             {lang.label}
           </option>

@@ -844,7 +844,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
         height: '100%',
         minHeight: 0,
         flex: '1 1 0%',
-        backgroundColor: '#111827',
+        backgroundColor: '#0A0A0A',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -873,7 +873,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
           height: '100%',
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: '#0B1120'
+          backgroundColor: '#0A0A0A'
         }}
       >
         <CodeEditor
@@ -902,7 +902,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
           height: `${consoleHeight}px`,
           minHeight: '150px',
           maxHeight: '65%',
-          backgroundColor: '#111827',
+          backgroundColor: '#111111',
           flexShrink: 0,
           position: 'relative',
           overflow: 'hidden'
@@ -916,8 +916,8 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
             justifyContent: 'space-between',
             height: '36px',
             minHeight: '36px',
-            backgroundColor: '#172033',
-            borderBottom: '1px solid #273449',
+            backgroundColor: '#111111',
+            borderBottom: '1px solid #292929',
             padding: '0 12px',
             userSelect: 'none',
             flexShrink: 0
@@ -937,8 +937,8 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 fontWeight: 600,
                 borderRadius: '5px',
                 border: 'none',
-                backgroundColor: activeTab === 'testcase' ? '#111827' : 'transparent',
-                color: activeTab === 'testcase' ? '#38BDF8' : '#94A3B8',
+                backgroundColor: activeTab === 'testcase' ? '#1C1C1C' : 'transparent',
+                color: activeTab === 'testcase' ? '#F59E0B' : '#A1A1AA',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
@@ -960,8 +960,8 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 fontWeight: 600,
                 borderRadius: '5px',
                 border: 'none',
-                backgroundColor: activeTab === 'testresult' ? '#111827' : 'transparent',
-                color: activeTab === 'testresult' ? '#38BDF8' : '#94A3B8',
+                backgroundColor: activeTab === 'testresult' ? '#1C1C1C' : 'transparent',
+                color: activeTab === 'testresult' ? '#F59E0B' : '#A1A1AA',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
@@ -972,23 +972,23 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
           </div>
 
           {/* Status indicator on right */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94A3B8' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#71717A' }}>
             {isRunAllRunning ? (
               <>
-                <Loader style={{ width: '12px', height: '12px', color: '#6366F1', animation: 'cfusion-spin 1s linear infinite' }} />
-                <span style={{ color: '#6366F1' }}>
+                <Loader style={{ width: '12px', height: '12px', color: '#F59E0B', animation: 'cfusion-spin 1s linear infinite' }} />
+                <span style={{ color: '#F59E0B' }}>
                   {runProgress ? `Running ${runProgress.index + 1}/${runProgress.total}…` : 'Running All…'}
                 </span>
               </>
             ) : isRunningStatus ? (
               <>
-                <Loader style={{ width: '12px', height: '12px', color: '#6366F1', animation: 'cfusion-spin 1s linear infinite' }} />
-                <span style={{ color: '#6366F1' }}>Executing…</span>
+                <Loader style={{ width: '12px', height: '12px', color: '#F59E0B', animation: 'cfusion-spin 1s linear infinite' }} />
+                <span style={{ color: '#F59E0B' }}>Executing…</span>
               </>
             ) : execState.status === EXEC_STATUS.SUCCESS ? (
               <>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
-                <span style={{ color: '#10B981' }}>Accepted</span>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E', display: 'inline-block' }}></span>
+                <span style={{ color: '#22C55E' }}>Accepted</span>
               </>
             ) : execState.status === EXEC_STATUS.FAILED ? (
               <>
@@ -1002,7 +1002,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
               </>
             ) : (
               <>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
+                <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#22C55E', display: 'inline-block' }}></span>
                 <span>Ready</span>
               </>
             )}
@@ -1015,7 +1015,7 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
             flex: '1 1 0%',
             padding: '10px 12px',
             overflow: 'hidden',
-            backgroundColor: '#0B1120',
+            backgroundColor: '#0A0A0A',
             fontSize: '12px',
             minHeight: 0
           }}
@@ -1047,19 +1047,19 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
             justifyContent: 'space-between',
             height: '42px',
             minHeight: '42px',
-            backgroundColor: '#111827',
-            borderTop: '1px solid #273449',
+            backgroundColor: '#111111',
+            borderTop: '1px solid #292929',
             padding: '0 12px',
             flexShrink: 0,
             userSelect: 'none'
           }}
         >
           {/* Left: Backend status */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94A3B8' }}>
-            <Terminal style={{ width: '13px', height: '13px', color: '#818CF8' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#71717A' }}>
+            <Terminal style={{ width: '13px', height: '13px', color: '#A1A1AA' }} />
             <span>Judge0 · {currentLang}</span>
             {isRunAllRunning && runProgress && (
-              <span style={{ color: '#818CF8', marginLeft: '4px' }}>
+              <span style={{ color: '#F59E0B', marginLeft: '4px' }}>
                 ({runProgress.index + 1}/{runProgress.total})
               </span>
             )}
@@ -1067,11 +1067,11 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
 
           {/* Right: Only TWO primary execution actions: [ Run ] [ Submit ] */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Run Button (Executes currently selected test case) */}
+            {/* Run Button (Primary Action) */}
             <button
               onClick={handleRun}
               disabled={isRunning || testCases.length === 0}
-              className="cfusion-btn"
+              className="cfusion-btn cfusion-btn-primary"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1079,10 +1079,10 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 padding: '5px 14px',
                 fontSize: '12px',
                 fontWeight: 600,
-                borderRadius: '6px',
-                backgroundColor: isRunning ? '#1E293B' : '#4F46E5',
-                color: isRunning ? '#64748B' : '#FFFFFF',
-                border: `1px solid ${isRunning ? '#273449' : '#4F46E5'}`,
+                borderRadius: '5px',
+                backgroundColor: isRunning ? '#151515' : '#1A1A1A',
+                color: isRunning ? '#71717A' : '#FFFFFF',
+                border: `1px solid ${isRunning ? '#292929' : '#333333'}`,
                 cursor: isRunning || testCases.length === 0 ? 'not-allowed' : 'pointer',
                 transition: 'all 0.15s ease'
               }}
@@ -1096,10 +1096,10 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
               <span>{isRunning && !isRunAllRunning ? 'Running…' : 'Run'}</span>
             </button>
 
-            {/* Submit Button (Submits code to Codeforces) */}
+            {/* Submit Button (Primary Action) */}
             <button
               onClick={handleSubmit}
-              className="cfusion-btn"
+              className="cfusion-btn cfusion-btn-primary"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1107,10 +1107,10 @@ export default function WorkspaceRightPane({ context, meta, initialTheme = 'dark
                 padding: '5px 14px',
                 fontSize: '12px',
                 fontWeight: 600,
-                borderRadius: '6px',
-                backgroundColor: '#10B981',
+                borderRadius: '5px',
+                backgroundColor: '#1A1A1A',
                 color: '#FFFFFF',
-                border: '1px solid #10B981',
+                border: '1px solid #333333',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}

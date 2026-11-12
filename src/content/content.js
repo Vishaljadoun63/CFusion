@@ -8,9 +8,9 @@ import './workspace.css';
 import { initProblemWorkspace, teardownProblemWorkspace } from './problemLayout';
 
 console.log(
-  `%c[CFusion]%c Codeforces Reimagined Phase 2 active! 🚀`,
-  'background: #6366F1; color: #fff; font-weight: bold; padding: 2px 6px; border-radius: 4px;',
-  'color: #38BDF8; font-weight: bold;'
+  `%c[CFusion]%c Codeforces Reimagined active! 🚀`,
+  'background: #F59E0B; color: #111; font-weight: bold; padding: 2px 6px; border-radius: 4px;',
+  'color: #F59E0B; font-weight: bold;'
 );
 
 /**

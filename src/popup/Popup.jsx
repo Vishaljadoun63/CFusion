@@ -64,21 +64,21 @@ export default function Popup() {
   };
 
   return (
-    <div className="w-[360px] bg-[#0B1120] text-[#F8FAFC] flex flex-col p-4 select-none">
+    <div className="w-[360px] bg-[#0A0A0A] text-[#E5E5E5] flex flex-col p-4 select-none">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#273449]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#292929]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#6366F1] to-[#38BDF8] flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Code2 className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-[#151515] border border-[#292929] flex items-center justify-center">
+            <Code2 className="w-5 h-5 text-[#F59E0B]" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-base tracking-tight text-white">CFusion</span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#273449] text-[#38BDF8]">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#1A1A1A] text-[#A1A1AA] border border-[#333333]">
                 v0.1.0
               </span>
             </div>
-            <p className="text-[11px] text-[#94A3B8] -mt-0.5">Codeforces Reimagined</p>
+            <p className="text-[11px] text-[#A1A1AA] -mt-0.5">Codeforces Reimagined</p>
           </div>
         </div>
 
@@ -94,18 +94,18 @@ export default function Popup() {
       {/* Main Controls Card */}
       <div className="my-3 space-y-2.5">
         {/* Master Switch */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[#172033] border border-[#273449] hover:border-indigo-500/40 transition-colors">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-[#111111] border border-[#292929] hover:border-[#3F3F46] transition-colors">
           <div className="flex items-center gap-2.5">
-            <Zap className={`w-4 h-4 ${enabled ? 'text-indigo-400' : 'text-[#94A3B8]'}`} />
+            <Zap className={`w-4 h-4 ${enabled ? 'text-[#F59E0B]' : 'text-[#71717A]'}`} />
             <div>
-              <p className="text-xs font-semibold text-white">CFusion Redesign</p>
-              <p className="text-[11px] text-[#94A3B8]">Transform Codeforces UI</p>
+              <p className="text-xs font-semibold text-[#E5E5E5]">CFusion Workspace</p>
+              <p className="text-[11px] text-[#71717A]">Transform Codeforces UI</p>
             </div>
           </div>
           <button
             onClick={handleToggleEnabled}
             className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
-              enabled ? 'bg-[#6366F1]' : 'bg-[#273449]'
+              enabled ? 'bg-[#F59E0B]' : 'bg-[#292929]'
             }`}
           >
             <div
@@ -117,41 +117,41 @@ export default function Popup() {
         </div>
 
         {/* Theme Toggle */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[#172033] border border-[#273449] hover:border-indigo-500/40 transition-colors">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-[#111111] border border-[#292929] hover:border-[#3F3F46] transition-colors">
           <div className="flex items-center gap-2.5">
             {theme === 'dark' ? (
-              <Moon className="w-4 h-4 text-sky-400" />
+              <Moon className="w-4 h-4 text-[#A1A1AA]" />
             ) : (
               <Sun className="w-4 h-4 text-amber-400" />
             )}
             <div>
-              <p className="text-xs font-semibold text-white">Appearance</p>
-              <p className="text-[11px] text-[#94A3B8]">
-                {theme === 'dark' ? 'Modern Dark Theme' : 'Standard Light Theme'}
+              <p className="text-xs font-semibold text-[#E5E5E5]">Appearance</p>
+              <p className="text-[11px] text-[#71717A]">
+                {theme === 'dark' ? 'Minimalist Dark Theme' : 'Standard Light Theme'}
               </p>
             </div>
           </div>
           <button
             onClick={handleToggleTheme}
-            className="px-2.5 py-1 text-xs font-medium rounded-lg bg-[#273449] hover:bg-[#334460] text-white transition-colors cursor-pointer"
+            className="px-2.5 py-1 text-xs font-medium rounded bg-[#1A1A1A] hover:bg-[#242424] hover:border-[#F59E0B] border border-[#333333] text-[#D4D4D4] transition-colors cursor-pointer"
           >
             {theme === 'dark' ? 'Dark' : 'Light'}
           </button>
         </div>
 
-        {/* Monaco Editor Toggle (Prepared for Phase 3) */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[#172033] border border-[#273449] hover:border-indigo-500/40 transition-colors">
+        {/* Monaco Editor Toggle */}
+        <div className="flex items-center justify-between p-3 rounded-lg bg-[#111111] border border-[#292929] hover:border-[#3F3F46] transition-colors">
           <div className="flex items-center gap-2.5">
-            <Terminal className="w-4 h-4 text-indigo-400" />
+            <Terminal className="w-4 h-4 text-[#A1A1AA]" />
             <div>
-              <p className="text-xs font-semibold text-white">Monaco Code Editor</p>
-              <p className="text-[11px] text-[#94A3B8]">Auto-dock editor on problem pages</p>
+              <p className="text-xs font-semibold text-[#E5E5E5]">Monaco Code Editor</p>
+              <p className="text-[11px] text-[#71717A]">Auto-dock editor on problem pages</p>
             </div>
           </div>
           <button
             onClick={handleToggleEditor}
             className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
-              autoMountEditor ? 'bg-[#6366F1]' : 'bg-[#273449]'
+              autoMountEditor ? 'bg-[#F59E0B]' : 'bg-[#292929]'
             }`}
           >
             <div
@@ -165,34 +165,34 @@ export default function Popup() {
 
       {/* Quick Launch Actions */}
       <div className="pt-2">
-        <p className="text-[10px] uppercase font-bold tracking-wider text-[#94A3B8] mb-2">
+        <p className="text-[10px] uppercase font-bold tracking-wider text-[#71717A] mb-2">
           Quick Access
         </p>
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => openLink('https://codeforces.com/problemset')}
-            className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#111827] border border-[#273449] hover:border-indigo-500/50 hover:bg-[#172033] transition-all text-left cursor-pointer group"
+            className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#111111] border border-[#292929] hover:border-[#3F3F46] hover:bg-[#1C1C1C] transition-all text-left cursor-pointer group"
           >
-            <span className="text-xs font-medium text-slate-200 group-hover:text-indigo-300">
+            <span className="text-xs font-medium text-[#D4D4D4] group-hover:text-white">
               Problemset
             </span>
-            <ExternalLink className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-indigo-400" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#A1A1AA]" />
           </button>
 
           <button
             onClick={() => openLink('https://codeforces.com/contests')}
-            className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#111827] border border-[#273449] hover:border-indigo-500/50 hover:bg-[#172033] transition-all text-left cursor-pointer group"
+            className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#111111] border border-[#292929] hover:border-[#3F3F46] hover:bg-[#1C1C1C] transition-all text-left cursor-pointer group"
           >
-            <span className="text-xs font-medium text-slate-200 group-hover:text-indigo-300">
+            <span className="text-xs font-medium text-[#D4D4D4] group-hover:text-white">
               Contests
             </span>
-            <ExternalLink className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-indigo-400" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#A1A1AA]" />
           </button>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="mt-4 pt-3 border-t border-[#273449] flex items-center justify-between text-[11px] text-[#94A3B8]">
+      <div className="mt-4 pt-3 border-t border-[#292929] flex items-center justify-between text-[11px] text-[#71717A]">
         <span className="flex items-center gap-1">
           {savedStatus && (
             <span className="flex items-center gap-1 text-emerald-400">
@@ -202,8 +202,8 @@ export default function Popup() {
           )}
           {!savedStatus && 'Changes apply live'}
         </span>
-        <span className="flex items-center gap-1 text-indigo-400 font-medium">
-          <Sparkles className="w-3 h-3" /> Phase 1 Active
+        <span className="flex items-center gap-1 text-[#F59E0B] font-medium">
+          <Sparkles className="w-3 h-3" /> CFusion Active
         </span>
       </div>
     </div>

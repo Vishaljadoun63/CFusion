@@ -170,7 +170,7 @@ export default function CodeLibraryPanel({
       style={{
         position: 'absolute',
         inset: 0,
-        backgroundColor: '#0B1120',
+        backgroundColor: '#0A0A0A',
         zIndex: 50,
         display: 'flex',
         flexDirection: 'column',
@@ -187,8 +187,8 @@ export default function CodeLibraryPanel({
           height: '46px',
           minHeight: '46px',
           padding: '0 16px',
-          backgroundColor: '#111827',
-          borderBottom: '1px solid #1E293B',
+          backgroundColor: '#111111',
+          borderBottom: '1px solid #292929',
           flexShrink: 0
         }}
       >
@@ -203,9 +203,9 @@ export default function CodeLibraryPanel({
               padding: '4px 8px',
               fontSize: '12px',
               borderRadius: '6px',
-              backgroundColor: '#1E293B',
-              color: '#94A3B8',
-              border: '1px solid #334155',
+              backgroundColor: '#151515',
+              color: '#A1A1AA',
+              border: '1px solid #292929',
               cursor: 'pointer'
             }}
             title="Return to Monaco Editor"
@@ -215,8 +215,8 @@ export default function CodeLibraryPanel({
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Bookmark size={16} style={{ color: '#818CF8' }} />
-            <span style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC' }}>
+            <Bookmark size={16} style={{ color: '#F59E0B' }} />
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#E5E5E5' }}>
               My Codes
             </span>
             <span
@@ -225,9 +225,9 @@ export default function CodeLibraryPanel({
                 fontWeight: 600,
                 padding: '2px 8px',
                 borderRadius: '12px',
-                backgroundColor: 'rgba(99, 102, 241, 0.15)',
-                color: '#818CF8',
-                border: '1px solid rgba(99, 102, 241, 0.3)'
+                backgroundColor: '#151515',
+                color: '#F59E0B',
+                border: '1px solid #292929'
               }}
             >
               {solutions.length} {solutions.length === 1 ? 'solution' : 'solutions'}
@@ -248,15 +248,14 @@ export default function CodeLibraryPanel({
               fontSize: '12px',
               fontWeight: 600,
               borderRadius: '6px',
-              backgroundColor: '#4F46E5',
+              backgroundColor: '#1A1A1A',
               color: '#FFFFFF',
-              border: '1px solid #4F46E5',
-              cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(79, 70, 229, 0.4)'
+              border: '1px solid #333333',
+              cursor: 'pointer'
             }}
             title="Save current code from editor"
           >
-            <Plus size={13} />
+            <Plus size={13} style={{ color: '#F59E0B' }} />
             <span>Save Code</span>
           </button>
 
@@ -268,7 +267,7 @@ export default function CodeLibraryPanel({
               borderRadius: '6px',
               border: 'none',
               backgroundColor: 'transparent',
-              color: '#94A3B8',
+              color: '#A1A1AA',
               cursor: 'pointer'
             }}
             title="Close Library"
@@ -285,8 +284,8 @@ export default function CodeLibraryPanel({
             position: 'absolute',
             top: '54px',
             right: '20px',
-            backgroundColor: '#10B981',
-            color: '#FFFFFF',
+            backgroundColor: '#22C55E',
+            color: '#111111',
             padding: '8px 14px',
             borderRadius: '6px',
             fontSize: '12px',
@@ -295,7 +294,7 @@ export default function CodeLibraryPanel({
             alignItems: 'center',
             gap: '6px',
             zIndex: 60,
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.4)'
+            border: '1px solid #22C55E'
           }}
         >
           <Check size={14} />
@@ -310,8 +309,8 @@ export default function CodeLibraryPanel({
           flexDirection: 'column',
           gap: '10px',
           padding: '12px 16px',
-          backgroundColor: '#0F172A',
-          borderBottom: '1px solid #1E293B',
+          backgroundColor: '#111111',
+          borderBottom: '1px solid #292929',
           flexShrink: 0
         }}
       >
@@ -323,14 +322,14 @@ export default function CodeLibraryPanel({
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: '#1E293B',
-              border: '1px solid #334155',
+              backgroundColor: '#151515',
+              border: '1px solid #292929',
               borderRadius: '6px',
               padding: '6px 10px',
               flex: '1 1 0%'
             }}
           >
-            <Search size={14} style={{ color: '#64748B' }} />
+            <Search size={14} style={{ color: '#71717A' }} />
             <input
               type="text"
               value={searchQuery}
@@ -341,7 +340,7 @@ export default function CodeLibraryPanel({
                 backgroundColor: 'transparent',
                 border: 'none',
                 outline: 'none',
-                color: '#F8FAFC',
+                color: '#E5E5E5',
                 fontSize: '12px'
               }}
             />
@@ -351,7 +350,7 @@ export default function CodeLibraryPanel({
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#64748B',
+                  color: '#71717A',
                   cursor: 'pointer',
                   padding: 0
                 }}
@@ -363,15 +362,15 @@ export default function CodeLibraryPanel({
 
           {/* Topic Dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <span style={{ fontSize: '11px', color: '#64748B' }}>Topic:</span>
+            <span style={{ fontSize: '11px', color: '#71717A' }}>Topic:</span>
             <select
               value={selectedTopic}
               onChange={(e) => setSelectedTopic(e.target.value)}
               style={{
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
+                backgroundColor: '#151515',
+                border: '1px solid #292929',
                 borderRadius: '6px',
-                color: '#F8FAFC',
+                color: '#E5E5E5',
                 fontSize: '11px',
                 padding: '5px 8px',
                 outline: 'none',
@@ -387,15 +386,15 @@ export default function CodeLibraryPanel({
 
           {/* Sort Dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <span style={{ fontSize: '11px', color: '#64748B' }}>Sort:</span>
+            <span style={{ fontSize: '11px', color: '#71717A' }}>Sort:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               style={{
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
+                backgroundColor: '#151515',
+                border: '1px solid #292929',
                 borderRadius: '6px',
-                color: '#F8FAFC',
+                color: '#E5E5E5',
                 fontSize: '11px',
                 padding: '5px 8px',
                 outline: 'none',
@@ -412,7 +411,7 @@ export default function CodeLibraryPanel({
 
         {/* Row 2: Language Filter Pills */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto' }}>
-          <span style={{ fontSize: '11px', color: '#64748B', marginRight: '4px' }}>Language:</span>
+          <span style={{ fontSize: '11px', color: '#71717A', marginRight: '4px' }}>Language:</span>
           {[
             { id: 'all', label: 'All' },
             { id: 'cpp17', label: 'C++17' },
@@ -431,9 +430,9 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   fontWeight: isSelected ? 600 : 500,
                   borderRadius: '5px',
-                  backgroundColor: isSelected ? '#1E293B' : 'transparent',
-                  color: isSelected ? '#38BDF8' : '#94A3B8',
-                  border: isSelected ? '1px solid #38BDF8' : '1px solid #273449',
+                  backgroundColor: isSelected ? '#1C1C1C' : 'transparent',
+                  color: isSelected ? '#F59E0B' : '#A1A1AA',
+                  border: isSelected ? '1px solid #F59E0B' : '1px solid #292929',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
                   flexShrink: 0
@@ -458,7 +457,7 @@ export default function CodeLibraryPanel({
         }}
       >
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px', color: '#818CF8' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px', color: '#F59E0B' }}>
             <span>Loading library…</span>
           </div>
         ) : solutions.length === 0 ? (
@@ -470,17 +469,17 @@ export default function CodeLibraryPanel({
               alignItems: 'center',
               justifyContent: 'center',
               height: '240px',
-              color: '#64748B',
+              color: '#71717A',
               gap: '12px',
               textAlign: 'center'
             }}
           >
-            <Bookmark size={36} style={{ color: '#334155' }} />
+            <Bookmark size={36} style={{ color: '#292929' }} />
             <div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#E2E8F0', marginBottom: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#E5E5E5', marginBottom: '4px' }}>
                 No saved solutions yet.
               </div>
-              <div style={{ fontSize: '12px', color: '#64748B', maxWidth: '300px' }}>
+              <div style={{ fontSize: '12px', color: '#71717A', maxWidth: '300px' }}>
                 Save your solutions from the editor to build your personal competitive programming reference.
               </div>
             </div>
@@ -495,13 +494,13 @@ export default function CodeLibraryPanel({
                 fontSize: '12px',
                 fontWeight: 600,
                 borderRadius: '6px',
-                backgroundColor: '#4F46E5',
+                backgroundColor: '#1A1A1A',
                 color: '#FFFFFF',
-                border: '1px solid #4F46E5',
+                border: '1px solid #333333',
                 cursor: 'pointer'
               }}
             >
-              <Plus size={13} />
+              <Plus size={13} style={{ color: '#F59E0B' }} />
               <span>Save Your First Solution</span>
             </button>
           </div>
@@ -514,12 +513,12 @@ export default function CodeLibraryPanel({
               alignItems: 'center',
               justifyContent: 'center',
               height: '200px',
-              color: '#64748B',
+              color: '#71717A',
               gap: '8px'
             }}
           >
-            <Search size={28} style={{ color: '#334155' }} />
-            <span style={{ fontSize: '13px', fontWeight: 500, color: '#94A3B8' }}>
+            <Search size={28} style={{ color: '#292929' }} />
+            <span style={{ fontSize: '13px', fontWeight: 500, color: '#A1A1AA' }}>
               No solutions found. Try another search.
             </span>
             <button
@@ -531,7 +530,7 @@ export default function CodeLibraryPanel({
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#818CF8',
+                color: '#F59E0B',
                 fontSize: '12px',
                 cursor: 'pointer',
                 textDecoration: 'underline'
@@ -551,8 +550,8 @@ export default function CodeLibraryPanel({
               <div
                 key={sol.id}
                 style={{
-                  backgroundColor: '#111827',
-                  border: '1px solid #1E293B',
+                  backgroundColor: '#111111',
+                  border: '1px solid #292929',
                   borderRadius: '8px',
                   padding: '12px 14px',
                   display: 'flex',
@@ -565,7 +564,7 @@ export default function CodeLibraryPanel({
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
                   <div style={{ flex: '1 1 0%', minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#F8FAFC' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#E5E5E5' }}>
                         {sol.name}
                       </span>
 
@@ -576,9 +575,9 @@ export default function CodeLibraryPanel({
                           fontWeight: 700,
                           padding: '1px 6px',
                           borderRadius: '4px',
-                          backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                          color: '#38BDF8',
-                          border: '1px solid rgba(56, 189, 248, 0.25)'
+                          backgroundColor: '#151515',
+                          color: '#F59E0B',
+                          border: '1px solid #292929'
                         }}
                       >
                         {sol.languageLabel || getLanguageLabel(sol.language)}
@@ -592,9 +591,9 @@ export default function CodeLibraryPanel({
                             fontWeight: 600,
                             padding: '1px 6px',
                             borderRadius: '4px',
-                            backgroundColor: 'rgba(192, 132, 252, 0.12)',
-                            color: '#C084FC',
-                            border: '1px solid rgba(192, 132, 252, 0.25)'
+                            backgroundColor: '#151515',
+                            color: '#A1A1AA',
+                            border: '1px solid #292929'
                           }}
                         >
                           {sol.topic}
@@ -604,9 +603,9 @@ export default function CodeLibraryPanel({
 
                     {/* Problem Info */}
                     {(sol.problemName || sol.problemCode) && (
-                      <div style={{ fontSize: '11px', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ fontSize: '11px', color: '#A1A1AA', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         {sol.problemCode && (
-                          <span style={{ color: '#818CF8', fontWeight: 600 }}>
+                          <span style={{ color: '#F59E0B', fontWeight: 600 }}>
                             {sol.problemCode}
                           </span>
                         )}
@@ -616,7 +615,7 @@ export default function CodeLibraryPanel({
                             href={sol.problemUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: '#64748B', display: 'inline-flex', alignItems: 'center' }}
+                            style={{ color: '#71717A', display: 'inline-flex', alignItems: 'center' }}
                             title="View Problem on Codeforces"
                           >
                             <ExternalLink size={11} />
@@ -640,9 +639,9 @@ export default function CodeLibraryPanel({
                         fontSize: '11px',
                         fontWeight: 600,
                         borderRadius: '5px',
-                        backgroundColor: '#4F46E5',
-                        color: '#FFFFFF',
-                        border: '1px solid #4F46E5',
+                        backgroundColor: '#151515',
+                        color: '#E5E5E5',
+                        border: '1px solid #292929',
                         cursor: 'pointer'
                       }}
                       title="Load this code into Monaco editor"
@@ -660,8 +659,8 @@ export default function CodeLibraryPanel({
                         fontSize: '11px',
                         borderRadius: '5px',
                         backgroundColor: 'transparent',
-                        color: '#94A3B8',
-                        border: '1px solid #273449',
+                        color: '#A1A1AA',
+                        border: '1px solid #292929',
                         cursor: 'pointer'
                       }}
                       title="Rename this solution"
@@ -679,7 +678,7 @@ export default function CodeLibraryPanel({
                         borderRadius: '5px',
                         backgroundColor: 'transparent',
                         color: '#EF4444',
-                        border: '1px solid #273449',
+                        border: '1px solid #292929',
                         cursor: 'pointer'
                       }}
                       title="Delete this solution from library"
@@ -694,11 +693,11 @@ export default function CodeLibraryPanel({
                   <div
                     style={{
                       fontSize: '11px',
-                      color: '#94A3B8',
-                      backgroundColor: '#0B1120',
+                      color: '#A1A1AA',
+                      backgroundColor: '#0A0A0A',
                       padding: '5px 8px',
                       borderRadius: '4px',
-                      border: '1px solid #1E293B',
+                      border: '1px solid #292929',
                       fontStyle: 'italic',
                       lineHeight: '1.4'
                     }}
@@ -710,14 +709,15 @@ export default function CodeLibraryPanel({
                 {/* Tags row */}
                 {tags.length > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                    <Tag size={10} style={{ color: '#475569' }} />
+                    <Tag size={10} style={{ color: '#71717A' }} />
                     {tags.map((t, idx) => (
                       <span
                         key={idx}
                         style={{
                           fontSize: '10px',
-                          color: '#64748B',
-                          backgroundColor: '#1E293B',
+                          color: '#A1A1AA',
+                          backgroundColor: '#151515',
+                          border: '1px solid #292929',
                           padding: '1px 5px',
                           borderRadius: '3px'
                         }}
@@ -735,8 +735,8 @@ export default function CodeLibraryPanel({
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     fontSize: '10px',
-                    color: '#64748B',
-                    borderTop: '1px solid #1E293B',
+                    color: '#71717A',
+                    borderTop: '1px solid #292929',
                     paddingTop: '6px',
                     marginTop: '2px'
                   }}
@@ -759,7 +759,7 @@ export default function CodeLibraryPanel({
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.75)',
             backdropFilter: 'blur(2px)',
             display: 'flex',
             alignItems: 'center',
@@ -773,8 +773,8 @@ export default function CodeLibraryPanel({
             style={{
               width: '100%',
               maxWidth: '380px',
-              backgroundColor: '#111827',
-              border: '1px solid #334155',
+              backgroundColor: '#111111',
+              border: '1px solid #292929',
               borderRadius: '8px',
               padding: '16px',
               display: 'flex',
@@ -782,7 +782,7 @@ export default function CodeLibraryPanel({
               gap: '12px'
             }}
           >
-            <div style={{ fontSize: '13px', fontWeight: 600, color: '#F8FAFC' }}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: '#E5E5E5' }}>
               Rename Solution
             </div>
             <input
@@ -793,10 +793,10 @@ export default function CodeLibraryPanel({
               style={{
                 width: '100%',
                 padding: '6px 10px',
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
+                backgroundColor: '#151515',
+                border: '1px solid #292929',
                 borderRadius: '6px',
-                color: '#F8FAFC',
+                color: '#E5E5E5',
                 fontSize: '12px',
                 outline: 'none',
                 boxSizing: 'border-box'
@@ -814,8 +814,8 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   borderRadius: '5px',
                   backgroundColor: 'transparent',
-                  color: '#94A3B8',
-                  border: '1px solid #334155',
+                  color: '#A1A1AA',
+                  border: '1px solid #292929',
                   cursor: 'pointer'
                 }}
               >
@@ -829,9 +829,9 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   fontWeight: 600,
                   borderRadius: '5px',
-                  backgroundColor: '#4F46E5',
+                  backgroundColor: '#1A1A1A',
                   color: '#FFFFFF',
-                  border: 'none',
+                  border: '1px solid #333333',
                   cursor: 'pointer'
                 }}
               >
@@ -848,7 +848,7 @@ export default function CodeLibraryPanel({
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.75)',
             backdropFilter: 'blur(2px)',
             display: 'flex',
             alignItems: 'center',
@@ -862,7 +862,7 @@ export default function CodeLibraryPanel({
             style={{
               width: '100%',
               maxWidth: '380px',
-              backgroundColor: '#111827',
+              backgroundColor: '#111111',
               border: '1px solid #EF4444',
               borderRadius: '8px',
               padding: '16px',
@@ -875,8 +875,8 @@ export default function CodeLibraryPanel({
               <AlertTriangle size={16} />
               <span>Confirm Delete</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#CBD5E1', lineHeight: '1.4' }}>
-              Are you sure you want to delete <strong style={{ color: '#FFFFFF' }}>"{deleteTargetSol.name}"</strong>? This action cannot be undone.
+            <div style={{ fontSize: '12px', color: '#A1A1AA', lineHeight: '1.4' }}>
+              Are you sure you want to delete <strong style={{ color: '#E5E5E5' }}>"{deleteTargetSol.name}"</strong>? This action cannot be undone.
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
               <button
@@ -887,8 +887,8 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   borderRadius: '5px',
                   backgroundColor: 'transparent',
-                  color: '#94A3B8',
-                  border: '1px solid #334155',
+                  color: '#A1A1AA',
+                  border: '1px solid #292929',
                   cursor: 'pointer'
                 }}
               >
@@ -904,7 +904,7 @@ export default function CodeLibraryPanel({
                   borderRadius: '5px',
                   backgroundColor: '#EF4444',
                   color: '#FFFFFF',
-                  border: 'none',
+                  border: '1px solid #EF4444',
                   cursor: 'pointer'
                 }}
               >
@@ -921,7 +921,7 @@ export default function CodeLibraryPanel({
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.75)',
             backdropFilter: 'blur(2px)',
             display: 'flex',
             alignItems: 'center',
@@ -935,8 +935,8 @@ export default function CodeLibraryPanel({
             style={{
               width: '100%',
               maxWidth: '400px',
-              backgroundColor: '#111827',
-              border: '1px solid #F59E0B',
+              backgroundColor: '#111111',
+              border: '1px solid #292929',
               borderRadius: '8px',
               padding: '16px',
               display: 'flex',
@@ -948,8 +948,8 @@ export default function CodeLibraryPanel({
               <AlertTriangle size={16} />
               <span>Replace Current Editor Code?</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#CBD5E1', lineHeight: '1.4' }}>
-              Your current editor contains code. Opening <strong style={{ color: '#FFFFFF' }}>"{openConfirmTarget.name}"</strong> will replace the code currently in Monaco.
+            <div style={{ fontSize: '12px', color: '#A1A1AA', lineHeight: '1.4' }}>
+              Your current editor contains code. Opening <strong style={{ color: '#E5E5E5' }}>"{openConfirmTarget.name}"</strong> will replace the code currently in Monaco.
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
               <button
@@ -960,8 +960,8 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   borderRadius: '5px',
                   backgroundColor: 'transparent',
-                  color: '#94A3B8',
-                  border: '1px solid #334155',
+                  color: '#A1A1AA',
+                  border: '1px solid #292929',
                   cursor: 'pointer'
                 }}
               >
@@ -975,9 +975,9 @@ export default function CodeLibraryPanel({
                   fontSize: '11px',
                   fontWeight: 600,
                   borderRadius: '5px',
-                  backgroundColor: '#4F46E5',
+                  backgroundColor: '#1A1A1A',
                   color: '#FFFFFF',
-                  border: 'none',
+                  border: '1px solid #333333',
                   cursor: 'pointer'
                 }}
               >

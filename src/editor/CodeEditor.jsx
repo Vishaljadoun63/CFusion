@@ -57,29 +57,29 @@ function runMonacoPostInit(monacoInstance) {
   }
 
   try {
-    // Define CFusion dark theme.
+    // Define CFusion minimalist black & orange dark theme.
     monacoInstance.editor.defineTheme('cfusion-dark', {
       base: 'vs-dark',
       inherit: true,
       rules: [
-        { token: 'comment', foreground: '64748B', fontStyle: 'italic' },
-        { token: 'keyword', foreground: '818CF8', fontStyle: 'bold' },
-        { token: 'string', foreground: '38BDF8' },
-        { token: 'number', foreground: 'F472B6' },
-        { token: 'type', foreground: '38BDF8' },
-        { token: 'function', foreground: 'A78BFA' }
+        { token: 'comment', foreground: '71717A', fontStyle: 'italic' },
+        { token: 'keyword', foreground: 'F59E0B', fontStyle: 'bold' },
+        { token: 'string', foreground: '22C55E' },
+        { token: 'number', foreground: 'F59E0B' },
+        { token: 'type', foreground: 'E5E5E5' },
+        { token: 'function', foreground: 'F8FAFC' }
       ],
       colors: {
-        'editor.background': '#0B1120',
-        'editor.foreground': '#F8FAFC',
-        'editor.lineHighlightBackground': '#111827',
-        'editorLineNumber.foreground': '#475569',
-        'editorLineNumber.activeForeground': '#818CF8',
-        'editor.selectionBackground': '#273449',
-        'editorCursor.foreground': '#38BDF8',
-        'editorWhitespace.foreground': '#1E293B',
-        'editorIndentGuide.background': '#1E293B',
-        'editorIndentGuide.activeBackground': '#273449'
+        'editor.background': '#0A0A0A',
+        'editor.foreground': '#E5E5E5',
+        'editor.lineHighlightBackground': '#151515',
+        'editorLineNumber.foreground': '#71717A',
+        'editorLineNumber.activeForeground': '#F59E0B',
+        'editor.selectionBackground': '#292929',
+        'editorCursor.foreground': '#F59E0B',
+        'editorWhitespace.foreground': '#1C1C1C',
+        'editorIndentGuide.background': '#1C1C1C',
+        'editorIndentGuide.activeBackground': '#292929'
       }
     });
   } catch (e) {
@@ -197,7 +197,7 @@ export default function CodeEditor({
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        backgroundColor: '#0B1120'
+        backgroundColor: '#0A0A0A'
       }}
     >
       <Editor
@@ -217,11 +217,11 @@ export default function CodeEditor({
               justifyContent: 'center',
               height: '100%',
               gap: '12px',
-              backgroundColor: '#0B1120',
-              color: '#94A3B8'
+              backgroundColor: '#0A0A0A',
+              color: '#A1A1AA'
             }}
           >
-            <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#6366F1', width: '24px', height: '24px' }} />
+            <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#F59E0B', width: '24px', height: '24px' }} />
             <span style={{ fontSize: '12px', fontFamily: "'JetBrains Mono', Consolas, monospace" }}>
               Initializing Monaco Editor...
             </span>

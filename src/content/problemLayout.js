@@ -158,9 +158,9 @@ export function initProblemWorkspace(context) {
   const tagsPopover = document.createElement('div');
   tagsPopover.className = 'cfusion-tags-popover';
   tagsPopover.innerHTML = `
-    <div style="font-size:12px; font-weight:600; color:#F8FAFC; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-size:12px; font-weight:600; color:#E5E5E5; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
       <span>Problem Tags</span>
-      <span style="font-size:10px; color:#94A3B8;">Spoiler Warning</span>
+      <span style="font-size:10px; color:#A1A1AA;">Spoiler Warning</span>
     </div>
     <div>
       ${meta.tags.map(t => `<span class="cfusion-tag-pill">${t}</span>`).join('')}
@@ -215,7 +215,7 @@ export function initProblemWorkspace(context) {
   drawer.innerHTML = `
     <div class="cfusion-drawer-header">
       <div class="cfusion-drawer-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="15" x2="15" y1="3" y2="21"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="15" x2="15" y1="3" y2="21"/></svg>
         <span>Contest Tools & Sidebar</span>
       </div>
       <button class="cfusion-btn" id="cfusion-close-drawer">

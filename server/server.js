@@ -23,7 +23,7 @@ dotenv.config({ path: resolve(__dirname, '.env') });
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001', 10);
-const HOST = '127.0.0.1';
+const HOST = '0.0.0.0';
 const JUDGE0_API_URL = (process.env.JUDGE0_API_URL || 'https://ce.judge0.com').replace(/\/+$/, '');
 const JUDGE0_API_KEY = process.env.JUDGE0_API_KEY || '';
 const JUDGE0_API_HOST = process.env.JUDGE0_API_HOST || '';
@@ -48,30 +48,30 @@ function getJudge0Headers() {
   return headers;
 }
 
+
 // Security: Configure CORS
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
-  : null;
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow non-browser requests (curl, server-to-server) and chrome-extension://
-    if (!origin) return callback(null, true);
-    if (!allowedOrigins) {
-      // By default allow localhost and Chrome extensions
-      if (origin.startsWith('chrome-extension://') || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1') || origin.includes('codeforces.com')) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    }
-    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Blocked by CORS'));
-  },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+    origin: (origin, callback) => {
+        // Permit requests without an Origin header, such as health checks.
+        if (!origin) {
+            return callback(null, true);
+        }
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Blocked by CORS'));
+    },
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 // Body parser with size limit to prevent payload flooding
 app.use(express.json({ limit: '256kb' }));

@@ -141,10 +141,9 @@ export default function SaveSolutionModal({
         style={{
           width: '100%',
           maxWidth: '520px',
-          backgroundColor: '#0F172A',
-          border: '1px solid #334155',
-          borderRadius: '10px',
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
+          backgroundColor: '#111111',
+          border: '1px solid #292929',
+          borderRadius: '6px',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -157,14 +156,14 @@ export default function SaveSolutionModal({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '14px 18px',
-            backgroundColor: '#1E293B',
-            borderBottom: '1px solid #334155'
+            padding: '12px 16px',
+            backgroundColor: '#151515',
+            borderBottom: '1px solid #292929'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Bookmark size={16} style={{ color: '#818CF8' }} />
-            <span style={{ fontSize: '14px', fontWeight: 600, color: '#F8FAFC' }}>
+            <Bookmark size={15} style={{ color: '#F59E0B' }} />
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#E5E5E5' }}>
               Save Solution to Library
             </span>
           </div>
@@ -176,11 +175,11 @@ export default function SaveSolutionModal({
               borderRadius: '4px',
               border: 'none',
               backgroundColor: 'transparent',
-              color: '#94A3B8',
+              color: '#A1A1AA',
               cursor: 'pointer'
             }}
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
 
@@ -188,7 +187,7 @@ export default function SaveSolutionModal({
         <form
           onSubmit={handleSubmit}
           style={{
-            padding: '16px 18px',
+            padding: '16px',
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
@@ -198,7 +197,7 @@ export default function SaveSolutionModal({
         >
           {/* Solution Name */}
           <div>
-            <label style={{ display: 'block', fontWeight: 600, color: '#E2E8F0', marginBottom: '5px' }}>
+            <label style={{ display: 'block', fontWeight: 600, color: '#E5E5E5', marginBottom: '5px' }}>
               Solution Name <span style={{ color: '#EF4444' }}>*</span>
             </label>
             <input
@@ -210,10 +209,10 @@ export default function SaveSolutionModal({
               style={{
                 width: '100%',
                 padding: '7px 10px',
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
-                borderRadius: '6px',
-                color: '#F8FAFC',
+                backgroundColor: '#151515',
+                border: '1px solid #292929',
+                borderRadius: '5px',
+                color: '#E5E5E5',
                 fontSize: '12px',
                 outline: 'none',
                 boxSizing: 'border-box'
@@ -229,10 +228,10 @@ export default function SaveSolutionModal({
                 alignItems: 'flex-start',
                 gap: '8px',
                 padding: '8px 10px',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
                 border: '1px solid #F59E0B',
-                borderRadius: '6px',
-                color: '#FCD34D',
+                borderRadius: '5px',
+                color: '#F59E0B',
                 fontSize: '11px'
               }}
             >
@@ -255,16 +254,16 @@ export default function SaveSolutionModal({
           <div style={{ display: 'flex', gap: '10px' }}>
             {/* Language */}
             <div style={{ flex: '1 1 0%' }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#94A3B8', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontWeight: 600, color: '#A1A1AA', marginBottom: '4px' }}>
                 Language
               </label>
               <div
                 style={{
                   padding: '6px 10px',
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  borderRadius: '6px',
-                  color: '#38BDF8',
+                  backgroundColor: '#151515',
+                  border: '1px solid #292929',
+                  borderRadius: '5px',
+                  color: '#F59E0B',
                   fontWeight: 600,
                   fontSize: '11px',
                   display: 'flex',
@@ -279,16 +278,16 @@ export default function SaveSolutionModal({
 
             {/* Problem Code & Title */}
             <div style={{ flex: '2 1 0%' }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#94A3B8', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontWeight: 600, color: '#A1A1AA', marginBottom: '4px' }}>
                 Problem
               </label>
               <div
                 style={{
                   padding: '6px 10px',
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  borderRadius: '6px',
-                  color: '#E2E8F0',
+                  backgroundColor: '#151515',
+                  border: '1px solid #292929',
+                  borderRadius: '5px',
+                  color: '#E5E5E5',
                   fontSize: '11px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -296,7 +295,7 @@ export default function SaveSolutionModal({
                 }}
                 title={`${problemCode ? problemCode + ' · ' : ''}${problemName || 'Custom Problem'}`}
               >
-                {problemCode && <span style={{ color: '#818CF8', fontWeight: 600, marginRight: '6px' }}>{problemCode}</span>}
+                {problemCode && <span style={{ color: '#F59E0B', fontWeight: 600, marginRight: '6px' }}>{problemCode}</span>}
                 <span>{problemName || 'Custom Problem'}</span>
               </div>
             </div>
@@ -306,7 +305,7 @@ export default function SaveSolutionModal({
           <div style={{ display: 'flex', gap: '10px' }}>
             {/* Topic */}
             <div style={{ flex: '1 1 0%' }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#E2E8F0', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontWeight: 600, color: '#E5E5E5', marginBottom: '4px' }}>
                 Topic
               </label>
               <select
@@ -315,10 +314,10 @@ export default function SaveSolutionModal({
                 style={{
                   width: '100%',
                   padding: '6px 8px',
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  borderRadius: '6px',
-                  color: '#F8FAFC',
+                  backgroundColor: '#151515',
+                  border: '1px solid #292929',
+                  borderRadius: '5px',
+                  color: '#E5E5E5',
                   fontSize: '12px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -339,10 +338,10 @@ export default function SaveSolutionModal({
                     width: '100%',
                     marginTop: '5px',
                     padding: '5px 8px',
-                    backgroundColor: '#1E293B',
-                    border: '1px solid #334155',
+                    backgroundColor: '#151515',
+                    border: '1px solid #292929',
                     borderRadius: '5px',
-                    color: '#F8FAFC',
+                    color: '#E5E5E5',
                     fontSize: '11px',
                     boxSizing: 'border-box'
                   }}
@@ -352,8 +351,8 @@ export default function SaveSolutionModal({
 
             {/* Tags */}
             <div style={{ flex: '1 1 0%' }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#E2E8F0', marginBottom: '4px' }}>
-                Tags <span style={{ color: '#64748B', fontWeight: 400 }}>(comma-separated)</span>
+              <label style={{ display: 'block', fontWeight: 600, color: '#E5E5E5', marginBottom: '4px' }}>
+                Tags <span style={{ color: '#71717A', fontWeight: 400 }}>(comma-separated)</span>
               </label>
               <input
                 type="text"
@@ -363,10 +362,10 @@ export default function SaveSolutionModal({
                 style={{
                   width: '100%',
                   padding: '6px 8px',
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  borderRadius: '6px',
-                  color: '#F8FAFC',
+                  backgroundColor: '#151515',
+                  border: '1px solid #292929',
+                  borderRadius: '5px',
+                  color: '#E5E5E5',
                   fontSize: '12px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -377,8 +376,8 @@ export default function SaveSolutionModal({
 
           {/* Notes */}
           <div>
-            <label style={{ display: 'block', fontWeight: 600, color: '#E2E8F0', marginBottom: '4px' }}>
-              Notes & Complexity <span style={{ color: '#64748B', fontWeight: 400 }}>(optional)</span>
+            <label style={{ display: 'block', fontWeight: 600, color: '#E5E5E5', marginBottom: '4px' }}>
+              Notes & Complexity <span style={{ color: '#71717A', fontWeight: 400 }}>(optional)</span>
             </label>
             <textarea
               value={notes}
@@ -388,10 +387,10 @@ export default function SaveSolutionModal({
               style={{
                 width: '100%',
                 padding: '6px 10px',
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
-                borderRadius: '6px',
-                color: '#F8FAFC',
+                backgroundColor: '#151515',
+                border: '1px solid #292929',
+                borderRadius: '5px',
+                color: '#E5E5E5',
                 fontSize: '12px',
                 lineHeight: '1.4',
                 outline: 'none',
@@ -409,15 +408,15 @@ export default function SaveSolutionModal({
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '6px 10px',
-              backgroundColor: '#0B1120',
-              border: '1px solid #1E293B',
-              borderRadius: '6px',
+              backgroundColor: '#0A0A0A',
+              border: '1px solid #292929',
+              borderRadius: '5px',
               fontSize: '11px',
-              color: '#64748B'
+              color: '#71717A'
             }}
           >
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-              <FileText size={12} style={{ color: '#818CF8' }} />
+              <FileText size={12} style={{ color: '#F59E0B' }} />
               Capturing current Monaco editor content
             </span>
             <span>{codeLines} {codeLines === 1 ? 'line' : 'lines'} ({Math.round(code.length / 1024 * 10) / 10} KB)</span>
@@ -438,7 +437,7 @@ export default function SaveSolutionModal({
               justifyContent: 'flex-end',
               gap: '8px',
               paddingTop: '8px',
-              borderTop: '1px solid #1E293B'
+              borderTop: '1px solid #292929'
             }}
           >
             <button
@@ -447,12 +446,12 @@ export default function SaveSolutionModal({
               disabled={isSubmitting}
               className="cfusion-btn"
               style={{
-                padding: '6px 14px',
+                padding: '5px 12px',
                 fontSize: '12px',
-                borderRadius: '6px',
+                borderRadius: '5px',
                 backgroundColor: 'transparent',
-                color: '#94A3B8',
-                border: '1px solid #334155',
+                color: '#A1A1AA',
+                border: '1px solid #292929',
                 cursor: 'pointer'
               }}
             >
@@ -461,23 +460,22 @@ export default function SaveSolutionModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="cfusion-btn"
+              className="cfusion-btn cfusion-btn-primary"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 16px',
+                padding: '5px 14px',
                 fontSize: '12px',
                 fontWeight: 600,
-                borderRadius: '6px',
-                backgroundColor: '#4F46E5',
+                borderRadius: '5px',
+                backgroundColor: '#1A1A1A',
                 color: '#FFFFFF',
-                border: '1px solid #4F46E5',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                boxShadow: '0 1px 3px rgba(79, 70, 229, 0.4)'
+                border: '1px solid #333333',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer'
               }}
             >
-              <Bookmark size={13} />
+              <Bookmark size={13} style={{ color: '#F59E0B' }} />
               <span>{isSubmitting ? 'Saving…' : (overwrite ? 'Overwrite Solution' : 'Save Solution')}</span>
             </button>
           </div>

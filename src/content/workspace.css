@@ -1,7 +1,24 @@
 /**
  * CFusion - Problem Workspace Styling
- * Modern split-screen layout, independent scroll containers, resizer, and controls
+ * Minimalist Black & Orange Design System
+ * Inspired by LeetCode's understated UI, retaining CFusion's identity
  */
+
+:root {
+  --cf-bg-main: #0A0A0A;
+  --cf-bg-secondary: #111111;
+  --cf-bg-panel: #151515;
+  --cf-bg-hover: #1C1C1C;
+  --cf-border: #292929;
+  --cf-text-primary: #E5E5E5;
+  --cf-text-secondary: #A1A1AA;
+  --cf-text-muted: #71717A;
+  --cf-accent: #F59E0B;
+  --cf-accent-hover: #D97706;
+  --cf-success: #22C55E;
+  --cf-error: #EF4444;
+  --cf-warning: #F59E0B;
+}
 
 /* Workspace Container: Fills viewport below minimal topbar */
 #cfusion-workspace {
@@ -12,8 +29,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #0B1120;
-  color: #F8FAFC;
+  background-color: var(--cf-bg-main);
+  color: var(--cf-text-primary);
   z-index: 99990;
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -40,10 +57,10 @@ body.cfusion-workspace-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  min-height: 52px;
-  background-color: #111827;
-  border-bottom: 1px solid #273449;
+  height: 48px;
+  min-height: 48px;
+  background-color: var(--cf-bg-secondary);
+  border-bottom: 1px solid var(--cf-border);
   padding: 0 16px;
   gap: 16px;
   user-select: none;
@@ -61,35 +78,35 @@ body.cfusion-workspace-active {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #172033;
-  border: 1px solid #273449;
+  background: var(--cf-bg-panel);
+  border: 1px solid var(--cf-border);
   padding: 4px 10px;
-  border-radius: 8px;
-  color: #F8FAFC;
+  border-radius: 6px;
+  color: var(--cf-text-primary);
   font-weight: 700;
   font-size: 13px;
   letter-spacing: -0.01em;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .cfusion-brand-pill:hover {
-  border-color: #6366F1;
-  background: #1E293B;
+  border-color: var(--cf-accent);
+  background: var(--cf-bg-hover);
   color: #FFFFFF;
   text-decoration: none;
 }
 
 .cfusion-brand-logo {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  background: linear-gradient(135deg, #6366F1, #38BDF8);
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--cf-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: #111111;
   font-weight: 800;
   font-size: 11px;
 }
@@ -104,20 +121,20 @@ body.cfusion-workspace-active {
 }
 
 .cfusion-problem-code-badge {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  color: #818CF8;
-  font-size: 12px;
+  background: var(--cf-bg-panel);
+  border: 1px solid var(--cf-border);
+  color: var(--cf-accent);
+  font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 6px;
+  padding: 2px 7px;
+  border-radius: 5px;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .cfusion-problem-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #F8FAFC;
+  color: var(--cf-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -135,18 +152,18 @@ body.cfusion-workspace-active {
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: #94A3B8;
-  background: #172033;
-  border: 1px solid #273449;
+  color: var(--cf-text-secondary);
+  background: var(--cf-bg-panel);
+  border: 1px solid var(--cf-border);
   padding: 3px 8px;
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .cfusion-meta-pill svg {
   width: 12px;
   height: 12px;
-  color: #38BDF8;
+  color: var(--cf-text-muted);
 }
 
 .cfusion-topbar-right {
@@ -155,15 +172,16 @@ body.cfusion-workspace-active {
   gap: 8px;
 }
 
+/* Base button styling */
 .cfusion-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #172033;
-  color: #E2E8F0;
-  border: 1px solid #273449;
-  border-radius: 6px;
-  padding: 6px 10px;
+  background: var(--cf-bg-panel);
+  color: var(--cf-text-secondary);
+  border: 1px solid var(--cf-border);
+  border-radius: 5px;
+  padding: 5px 10px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -172,64 +190,64 @@ body.cfusion-workspace-active {
 }
 
 .cfusion-btn:hover {
-  background: #1E293B;
-  border-color: #475569;
-  color: #FFFFFF;
+  background: var(--cf-bg-hover);
+  border-color: #3F3F46;
+  color: var(--cf-text-primary);
 }
 
 .cfusion-btn.active {
-  background: #6366F1;
-  border-color: #6366F1;
-  color: #FFFFFF;
+  background: var(--cf-bg-hover);
+  border-color: var(--cf-accent);
+  color: var(--cf-accent);
 }
 
-.cfusion-btn-accent {
-  background: #6366F1;
-  border-color: #6366F1;
-  color: #FFFFFF;
+/* Primary Action Buttons (Run, Submit, Save Code) — dark/neutral, NOT orange */
+.cfusion-btn-primary {
+  background: #1A1A1A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #333333 !important;
+  font-weight: 600 !important;
 }
 
-.cfusion-btn-accent:hover {
-  background: #4F46E5;
-  border-color: #4F46E5;
+.cfusion-btn-primary:hover {
+  background: #242424 !important;
+  border-color: var(--cf-accent) !important;
+  color: #FFFFFF !important;
 }
 
-.cfusion-btn-success {
-  background: #10B981;
-  border-color: #10B981;
-  color: #FFFFFF;
-}
-
-.cfusion-btn-success:hover {
-  background: #059669;
-  border-color: #059669;
+.cfusion-btn-primary:active {
+  background: #2A2A2A !important;
 }
 
 /* View Mode Segmented Switch */
 .cfusion-segmented-control {
   display: flex;
-  background: #0B1120;
-  border: 1px solid #273449;
-  border-radius: 6px;
+  background: var(--cf-bg-main);
+  border: 1px solid var(--cf-border);
+  border-radius: 5px;
   padding: 2px;
 }
 
 .cfusion-segmented-btn {
   background: transparent;
   border: none;
-  color: #94A3B8;
+  color: var(--cf-text-secondary);
   padding: 3px 8px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
+.cfusion-segmented-btn:hover {
+  color: var(--cf-text-primary);
+}
+
 .cfusion-segmented-btn.active {
-  background: #172033;
-  color: #38BDF8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  background: var(--cf-bg-hover);
+  color: var(--cf-accent);
+  border-bottom: 2px solid var(--cf-accent);
 }
 
 /* ==========================================================================
@@ -239,7 +257,7 @@ body.cfusion-workspace-active {
   display: flex;
   flex: 1;
   width: 100%;
-  height: calc(100vh - 52px);
+  height: calc(100vh - 48px);
   overflow: hidden;
   position: relative;
 }
@@ -252,7 +270,7 @@ body.cfusion-workspace-active {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #0B1120;
+  background-color: var(--cf-bg-main);
   padding: 24px 32px 60px 32px;
   box-sizing: border-box;
   scroll-behavior: smooth;
@@ -266,66 +284,66 @@ body.cfusion-workspace-active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: #111827;
-  border-left: 1px solid #273449;
+  background-color: var(--cf-bg-secondary);
+  border-left: 1px solid var(--cf-border);
 }
 
 /* Custom Scrollbars */
 #cfusion-left-pane::-webkit-scrollbar,
 #cfusion-right-pane::-webkit-scrollbar,
 .cfusion-scrollable::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 #cfusion-left-pane::-webkit-scrollbar-track,
 #cfusion-right-pane::-webkit-scrollbar-track,
 .cfusion-scrollable::-webkit-scrollbar-track {
-  background: #0B1120;
+  background: var(--cf-bg-main);
 }
 
 #cfusion-left-pane::-webkit-scrollbar-thumb,
 #cfusion-right-pane::-webkit-scrollbar-thumb,
 .cfusion-scrollable::-webkit-scrollbar-thumb {
-  background: #273449;
-  border-radius: 4px;
+  background: var(--cf-border);
+  border-radius: 3px;
 }
 
 #cfusion-left-pane::-webkit-scrollbar-thumb:hover,
 #cfusion-right-pane::-webkit-scrollbar-thumb:hover,
 .cfusion-scrollable::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3F3F46;
 }
 
 /* Resizable Divider */
 #cfusion-resizer {
-  width: 8px;
-  margin: 0 -4px;
+  width: 6px;
+  margin: 0 -3px;
   z-index: 20;
   cursor: col-resize;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 #cfusion-resizer:hover,
 #cfusion-resizer.is-dragging {
-  background: #6366F1;
+  background: var(--cf-accent);
 }
 
 #cfusion-resizer::after {
   content: '';
   width: 2px;
   height: 24px;
-  background: #475569;
+  background: var(--cf-border);
   border-radius: 1px;
 }
 
 #cfusion-resizer:hover::after,
 #cfusion-resizer.is-dragging::after {
-  background: #FFFFFF;
+  background: #111111;
 }
 
 /* ==========================================================================
@@ -333,9 +351,9 @@ body.cfusion-workspace-active {
    ========================================================================== */
 #cfusion-left-pane .problem-statement {
   background: transparent !important;
-  color: #E2E8F0 !important;
-  font-size: 15px !important;
-  line-height: 1.7 !important;
+  color: var(--cf-text-primary) !important;
+  font-size: 14.5px !important;
+  line-height: 1.75 !important;
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
@@ -346,14 +364,14 @@ body.cfusion-workspace-active {
 #cfusion-left-pane .problem-statement .header {
   margin-bottom: 24px !important;
   padding-bottom: 16px !important;
-  border-bottom: 1px solid #273449 !important;
+  border-bottom: 1px solid var(--cf-border) !important;
   text-align: left !important;
 }
 
 #cfusion-left-pane .problem-statement .header .title {
-  font-size: 26px !important;
+  font-size: 24px !important;
   font-weight: 700 !important;
-  color: #F8FAFC !important;
+  color: #FFFFFF !important;
   margin: 0 0 12px 0 !important;
   letter-spacing: -0.02em;
 }
@@ -363,21 +381,21 @@ body.cfusion-workspace-active {
 #cfusion-left-pane .problem-statement .header .input-file,
 #cfusion-left-pane .problem-statement .header .output-file {
   display: inline-block !important;
-  background: #172033 !important;
-  border: 1px solid #273449 !important;
-  color: #94A3B8 !important;
-  font-size: 12px !important;
+  background: var(--cf-bg-secondary) !important;
+  border: 1px solid var(--cf-border) !important;
+  color: var(--cf-text-secondary) !important;
+  font-size: 11.5px !important;
   font-family: 'JetBrains Mono', monospace !important;
-  padding: 4px 10px !important;
-  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  border-radius: 5px !important;
   margin-right: 8px !important;
   margin-bottom: 8px !important;
 }
 
 #cfusion-left-pane .problem-statement .section-title {
-  font-size: 17px !important;
+  font-size: 16px !important;
   font-weight: 700 !important;
-  color: #F8FAFC !important;
+  color: #FFFFFF !important;
   margin: 28px 0 12px 0 !important;
   display: flex !important;
   align-items: center !important;
@@ -387,9 +405,9 @@ body.cfusion-workspace-active {
 #cfusion-left-pane .problem-statement .section-title::before {
   content: '';
   display: inline-block;
-  width: 4px;
-  height: 16px;
-  background: #6366F1;
+  width: 3px;
+  height: 15px;
+  background: var(--cf-accent);
   border-radius: 2px;
 }
 
@@ -399,12 +417,11 @@ body.cfusion-workspace-active {
 }
 
 #cfusion-left-pane .sample-test {
-  border: 1px solid #273449 !important;
-  border-radius: 10px !important;
-  background: #111827 !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 8px !important;
+  background: var(--cf-bg-secondary) !important;
   margin-bottom: 16px !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
 #cfusion-left-pane .sample-test .input,
@@ -415,29 +432,29 @@ body.cfusion-workspace-active {
 }
 
 #cfusion-left-pane .sample-test .input {
-  border-bottom: 1px solid #273449 !important;
+  border-bottom: 1px solid var(--cf-border) !important;
 }
 
 #cfusion-left-pane .sample-test .title {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: #172033 !important;
-  color: #94A3B8 !important;
-  font-size: 12px !important;
+  background: var(--cf-bg-panel) !important;
+  color: var(--cf-text-secondary) !important;
+  font-size: 11px !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  padding: 8px 14px !important;
+  padding: 6px 12px !important;
   border: none !important;
 }
 
 #cfusion-left-pane .sample-test pre {
-  background: #0B1120 !important;
-  color: #38BDF8 !important;
+  background: var(--cf-bg-main) !important;
+  color: var(--cf-text-primary) !important;
   font-family: 'JetBrains Mono', Consolas, monospace !important;
-  font-size: 13px !important;
-  padding: 12px 14px !important;
+  font-size: 12.5px !important;
+  padding: 10px 12px !important;
   margin: 0 !important;
   line-height: 1.5 !important;
   white-space: pre !important;
@@ -446,12 +463,12 @@ body.cfusion-workspace-active {
 
 /* Sample Copy Button */
 .cfusion-copy-btn {
-  background: #273449;
-  border: none;
-  color: #E2E8F0;
-  font-size: 11px;
+  background: var(--cf-bg-secondary);
+  border: 1px solid var(--cf-border);
+  color: var(--cf-text-secondary);
+  font-size: 10.5px;
   font-weight: 500;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: 4px;
   cursor: pointer;
   display: inline-flex;
@@ -461,201 +478,129 @@ body.cfusion-workspace-active {
 }
 
 .cfusion-copy-btn:hover {
-  background: #6366F1;
-  color: #FFFFFF;
+  background: var(--cf-bg-hover);
+  border-color: var(--cf-accent);
+  color: var(--cf-text-primary);
 }
 
 .cfusion-copy-btn.copied {
-  background: #10B981;
-  color: #FFFFFF;
+  background: var(--cf-success);
+  border-color: var(--cf-success);
+  color: #111111;
 }
 
 /* Note block */
 #cfusion-left-pane .note {
   margin-top: 24px !important;
-  padding: 16px !important;
-  background: #172033 !important;
-  border-left: 3px solid #6366F1 !important;
-  border-radius: 0 8px 8px 0 !important;
+  padding: 14px 16px !important;
+  background: var(--cf-bg-panel) !important;
+  border-left: 3px solid var(--cf-accent) !important;
+  border-radius: 0 6px 6px 0 !important;
+  color: var(--cf-text-secondary) !important;
 }
 
 /* ==========================================================================
-   RIGHT PANE: INTEGRATED CODING WORKSPACE (PLACEHOLDER FOR MONACO)
+   RIGHT PANE: MONACO INTEGRATED WORKSPACE
    ========================================================================== */
-.cfusion-editor-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 42px;
-  min-height: 42px;
-  background: #172033;
-  border-bottom: 1px solid #273449;
-  padding: 0 12px;
-  user-select: none;
+.cfusion-workspace-right-pane {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  flex: 1 1 0% !important;
+  background-color: var(--cf-bg-main) !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 
-.cfusion-editor-tabs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.cfusion-editor-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  background-color: var(--cf-bg-secondary) !important;
+  border-bottom: 1px solid var(--cf-border) !important;
+  padding: 0 12px !important;
+  flex-shrink: 0 !important;
+  user-select: none !important;
+  z-index: 5;
 }
 
-.cfusion-editor-tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #111827;
-  color: #F8FAFC;
-  font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  padding: 5px 12px;
-  border-radius: 6px 6px 0 0;
-  border-top: 2px solid #6366F1;
-  font-weight: 500;
+.cfusion-monaco-wrapper {
+  display: flex !important;
+  flex: 1 1 0% !important;
+  min-height: 160px !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background-color: var(--cf-bg-main) !important;
 }
 
-.cfusion-editor-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.cfusion-monaco-mount {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background-color: var(--cf-bg-main) !important;
 }
 
-.cfusion-select {
-  background: #0B1120;
-  border: 1px solid #273449;
-  color: #F8FAFC;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  outline: none;
+.cfusion-monaco-mount .monaco-editor,
+.cfusion-monaco-mount .monaco-editor .overflow-guard {
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.cfusion-select:focus {
-  border-color: #6366F1;
-}
-
-/* Main Code Canvas Area */
-.cfusion-editor-body {
-  flex: 1;
-  min-height: 220px;
-  background: #0B1120;
-  position: relative;
-  overflow: auto;
-  display: flex;
-  font-family: 'JetBrains Mono', Consolas, monospace;
-}
-
-.cfusion-gutter {
-  width: 44px;
-  background: #0B1120;
-  border-right: 1px solid #1E293B;
-  color: #475569;
-  text-align: right;
-  padding: 12px 8px 12px 0;
-  font-size: 13px;
-  line-height: 1.6;
-  user-select: none;
-}
-
-.cfusion-editor-code {
-  flex: 1;
-  padding: 12px 16px;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #E2E8F0;
-  white-space: pre;
-  tab-size: 4;
-  outline: none;
-  overflow-x: auto;
-}
-
-/* Bottom Console Panel */
-.cfusion-console-panel {
-  display: flex;
-  flex-direction: column;
-  height: 220px;
-  min-height: 160px;
-  max-height: 50%;
-  background: #111827;
-  border-top: 1px solid #273449;
-}
-
-.cfusion-console-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 38px;
-  min-height: 38px;
-  background: #172033;
-  border-bottom: 1px solid #273449;
-  padding: 0 12px;
-}
-
-.cfusion-console-tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.cfusion-console-tab {
-  background: transparent;
-  border: none;
-  color: #94A3B8;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.15s ease;
-}
-
-.cfusion-console-tab.active {
-  background: #111827;
-  color: #38BDF8;
-}
-
-.cfusion-console-tab:hover {
-  color: #F8FAFC;
-}
-
-.cfusion-console-content {
-  flex: 1;
-  padding: 10px 14px;
-  overflow: auto;
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 12px;
-}
-
-.cfusion-console-content textarea {
+/* Console Horizontal Resizer Divider */
+.cfusion-console-resizer {
+  height: 5px;
   width: 100%;
-  height: 100%;
-  background: #0B1120;
-  border: 1px solid #273449;
-  border-radius: 6px;
-  color: #F8FAFC;
-  font-family: inherit;
-  font-size: 13px;
-  padding: 8px 10px;
-  resize: none;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.cfusion-console-content textarea:focus {
-  border-color: #6366F1;
-}
-
-/* Footer Execution Bar */
-.cfusion-execution-bar {
+  cursor: row-resize;
+  background: var(--cf-bg-secondary);
+  border-top: 1px solid var(--cf-border);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 46px;
-  min-height: 46px;
-  background: #111827;
-  border-top: 1px solid #273449;
-  padding: 0 12px;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+  z-index: 10;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.cfusion-console-resizer:hover,
+.cfusion-console-resizer.is-dragging {
+  background: var(--cf-accent);
+}
+
+.cfusion-console-resizer::after {
+  content: '';
+  width: 32px;
+  height: 2px;
+  background: var(--cf-border);
+  border-radius: 1px;
+  transition: background-color 0.15s ease;
+}
+
+.cfusion-console-resizer:hover::after,
+.cfusion-console-resizer.is-dragging::after {
+  background: #111111;
+}
+
+.cfusion-console-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 140px !important;
+  background-color: var(--cf-bg-secondary) !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 /* ==========================================================================
@@ -664,12 +609,12 @@ body.cfusion-workspace-active {
 #cfusion-sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(2px);
   z-index: 99995;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease;
 }
 
 #cfusion-sidebar-backdrop.open {
@@ -684,13 +629,13 @@ body.cfusion-workspace-active {
   width: 400px;
   max-width: 90vw;
   height: 100vh;
-  background: #111827;
-  border-left: 1px solid #273449;
-  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
+  background: var(--cf-bg-secondary);
+  border-left: 1px solid var(--cf-border);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.6);
   z-index: 99996;
   display: flex;
   flex-direction: column;
-  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
@@ -702,15 +647,15 @@ body.cfusion-workspace-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #273449;
-  background: #172033;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--cf-border);
+  background: var(--cf-bg-panel);
 }
 
 .cfusion-drawer-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #F8FAFC;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cf-text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -728,10 +673,14 @@ body.cfusion-workspace-active {
   padding: 0 !important;
   margin: 0 !important;
   float: none !important;
+  background: transparent !important;
 }
 
 #cfusion-sidebar-drawer .roundbox {
   margin-bottom: 16px !important;
+  background: var(--cf-bg-panel) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 6px !important;
 }
 
 /* Tags Dropdown Popover */
@@ -739,12 +688,12 @@ body.cfusion-workspace-active {
   position: absolute;
   top: 48px;
   right: 16px;
-  background: #172033;
-  border: 1px solid #273449;
-  border-radius: 8px;
+  background: var(--cf-bg-secondary);
+  border: 1px solid var(--cf-border);
+  border-radius: 6px;
   padding: 12px;
   max-width: 320px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
   z-index: 100;
   display: none;
 }
@@ -755,11 +704,11 @@ body.cfusion-workspace-active {
 
 .cfusion-tag-pill {
   display: inline-block;
-  background: #1E293B;
-  border: 1px solid #334155;
-  color: #38BDF8;
+  background: var(--cf-bg-panel);
+  border: 1px solid var(--cf-border);
+  color: var(--cf-text-secondary);
   font-size: 11px;
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 4px;
   margin: 3px;
 }
@@ -785,118 +734,9 @@ body.cfusion-workspace-active {
     border-left: none;
   }
 
-  .cfusion-mobile-tabs {
-    display: flex !important;
-  }
-
   .cfusion-hide-mobile {
     display: none !important;
   }
-}
-
-/* ==========================================================================
-   RIGHT PANE: REAL MONACO INTEGRATED WORKSPACE
-   ========================================================================== */
-.cfusion-workspace-right-pane {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  flex: 1 1 0% !important;
-  background-color: #111827 !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-.cfusion-editor-toolbar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  height: 42px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
-  background-color: #172033 !important;
-  border-bottom: 1px solid #273449 !important;
-  padding: 0 12px !important;
-  flex-shrink: 0 !important;
-  user-select: none !important;
-  z-index: 5;
-}
-
-.cfusion-monaco-wrapper {
-  display: flex !important;
-  flex: 1 1 0% !important;
-  min-height: 160px !important;
-  width: 100% !important;
-  height: 100% !important;
-  position: relative !important;
-  overflow: hidden !important;
-  background-color: #0B1120 !important;
-}
-
-.cfusion-monaco-mount {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  overflow: hidden !important;
-  background-color: #0B1120 !important;
-}
-
-.cfusion-monaco-mount .monaco-editor,
-.cfusion-monaco-mount .monaco-editor .overflow-guard {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Console Horizontal Resizer Divider */
-.cfusion-console-resizer {
-  height: 6px;
-  width: 100%;
-  cursor: row-resize;
-  background: #172033;
-  border-top: 1px solid #273449;
-  border-bottom: 1px solid #1E293B;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.15s ease;
-  z-index: 10;
-  user-select: none;
-  flex-shrink: 0;
-}
-
-.cfusion-console-resizer:hover,
-.cfusion-console-resizer.is-dragging {
-  background: #6366F1;
-}
-
-.cfusion-console-resizer::after {
-  content: '';
-  width: 36px;
-  height: 2px;
-  background: #475569;
-  border-radius: 1px;
-  transition: background-color 0.15s ease;
-}
-
-.cfusion-console-resizer:hover::after,
-.cfusion-console-resizer.is-dragging::after {
-  background: #FFFFFF;
-}
-
-.cfusion-console-panel {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 140px !important;
-  background-color: #111827 !important;
-  flex-shrink: 0 !important;
-  position: relative !important;
-  overflow: hidden !important;
 }
 
 @tailwind utilities;
